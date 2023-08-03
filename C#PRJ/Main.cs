@@ -24,11 +24,7 @@ namespace Witcher3_Multiplayer
             MForm.Hide();
             var a = Task.Run(() =>
             {
-                LOG("Starting Game");
-                GameManager.RunGame("G:\\The Witcher 3 Wild Hunt");
-                if(SocketManager.GameSocket == null || !SocketManager.GameSocket.Connected)
-                    SocketManager.ConnectToGame();
-                Thread.Sleep(20000);
+                Host.CreateServer("127.0.0.1", 33299, false);
             });
             await a;
             OverlForm.Show();
@@ -39,11 +35,10 @@ namespace Witcher3_Multiplayer
 
             var a = Task.Run(() =>
             {
-                //Host.CreateServer("127.0.0.1", 33220, false);
                 if (!SocketManager.IsConnected()) {
                     if (SocketManager.ConnectToGame())
                     {
-                        Host.CreateServer("127.0.0.1", 33299, false);
+                        SocketManager.ConnectToGame();
                         Client.ConnectToServer("127.0.0.1", 33299, false);
                     }
                 }
@@ -55,9 +50,10 @@ namespace Witcher3_Multiplayer
         {
             var a = Task.Run(() =>
             {
-                Host.CreateServer("127.0.0.1", 33220, false);
+                SocketManager.ConnectToGame();
+                Host.CreateServer("127.0.0.1", 33299, false);
                 Thread.Sleep(200);
-                Client.ConnectToServer("127.0.0.1", 33220, false);
+                Client.ConnectToServer("127.0.0.1", 33299, false);
             });
             await a;
         }

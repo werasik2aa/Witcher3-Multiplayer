@@ -7,6 +7,7 @@ using static Witcher3_Multiplayer.ClientHost.DataTypes;
 using System.Linq;
 using Witcher3_Multiplayer.Game;
 using System.Text;
+using System.Threading;
 
 namespace Witcher3_Multiplayer.ClientHost
 {
@@ -24,7 +25,7 @@ namespace Witcher3_Multiplayer.ClientHost
         private static bool SV_CHEATS = false;
         public static void CreateServer(string address, int port, bool RCON)
         {
-            if (!SocketManager.IsConnected())
+            if (!SocketManager.GameSocket.Connected)
             {
                 LOG("[host] Please start game first!");
                 return;
@@ -60,17 +61,23 @@ namespace Witcher3_Multiplayer.ClientHost
             {
                 LOG("Server Created");
                 IsHost = true;
-                socket_server.BeginReceiveFrom(state.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv = (ar) =>
+                while (SocketManager.GameSocket.Connected)
                 {
-                    try
+                    socket_server.BeginReceiveFrom(state.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv = (ar) =>
                     {
-                        State so = (State)ar.AsyncState;
-                        int bytes = socket_server.EndReceiveFrom(ar, ref epFrom);
-                        socket_server.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
-                        OperateWithData(so.buffer, bytes);
-                    }
-                    catch { }
-                }, state);
+                        try
+                        {
+                            State so = (State)ar.AsyncState;
+                            int bytes = socket_server.EndReceiveFrom(ar, ref epFrom);
+                            socket_server.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
+                            OperateWithData(so.buffer, bytes);
+                        }
+                        catch { }
+                    }, state);
+                    Manager.SendData(socket_server, state, (int) RecvSendTypes.RCV_VECTOR3, GameManager.GetPosition());
+                    Manager.SendData(socket_server, state, (int)RecvSendTypes.RCV_ROTATION, GameManager.GetRotation());
+                    Thread.Sleep(128);
+                }
             }
         }
         public static void OperateWithData(byte[] data, int count)
@@ -144,7 +151,7 @@ namespace Witcher3_Multiplayer.ClientHost
             LOG("[host] LevelID: " + info.LevelID);
             LOG("[host] Plevel: " + info.Plevel);
             Manager.PlayerData.Add(info);
-            //GameManager.SpawnNPC(, info.pos, info.rot);
+            GameManager.SpawnNPCEntity(info.ID, info.pos, info.rot);
         }
         
         public static void OnDisconnect(int id)

@@ -6,6 +6,7 @@ using static Witcher3_Multiplayer.langproc;
 using Witcher3_Multiplayer.Game;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Witcher3_Multiplayer.ClientHost
 {
@@ -33,7 +34,15 @@ namespace Witcher3_Multiplayer.ClientHost
             }
             socket_client = new Socket(SocketType.Stream, ProtocolType.Tcp);
             LOG("Connection to server: " + address + ":" + port);
-            socket_client.Connect(IPAddress.Parse(address), port);
+            try
+            {
+                socket_client.Connect(IPAddress.Parse(address), port);
+            }
+            catch
+            {
+                LOG("Connection refused or wrong");
+                return;
+            }
             if (socket_client.Connected)
             {
                 if (!RCON)
@@ -60,17 +69,23 @@ namespace Witcher3_Multiplayer.ClientHost
                     if (AccessShell("NET")) {
                         LOG("Connected to HOST-CONSOLE");
                         IsConnected = true;
-                        socket_client.BeginReceiveFrom(state.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv = (ar) =>
+                        while (SocketManager.GameSocket.Connected)
                         {
-                            try
+                            socket_client.BeginReceiveFrom(state.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv = (ar) =>
                             {
-                                State so = (State)ar.AsyncState;
-                                int bytes = socket_client.EndReceiveFrom(ar, ref epFrom);
-                                socket_client.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
-                                OperateWithRet(so.buffer, bytes);
-                            }
-                            catch { }
-                        }, state);
+                                try
+                                {
+                                    State so = (State)ar.AsyncState;
+                                    int bytes = socket_client.EndReceiveFrom(ar, ref epFrom);
+                                    socket_client.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
+                                    OperateWithRet(so.buffer, bytes);
+                                }
+                                catch { }
+                            }, state);
+                            Manager.SendData(socket_client, state, (int)RecvSendTypes.RCV_VECTOR3, GameManager.GetPosition());
+                            Manager.SendData(socket_client, state, (int)RecvSendTypes.RCV_ROTATION, GameManager.GetRotation());
+                            Thread.Sleep(128);
+                        }
                     }
                 }
             }
