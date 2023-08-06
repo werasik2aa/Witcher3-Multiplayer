@@ -8,14 +8,15 @@ namespace Witcher3_Multiplayer.ClientHost
     public struct PlayerData
     {
         public string NickName;
+        public string CharacterTemplate;
         public int ID;
         public double Version;
         public int HP;
         public int LevelID;
         public int Plevel;
         public int State;
-        public Vector3 pos;
-        public int rot;
+        public Vector3 PlayerPosition;
+        public Vector3 HorsePosition;
     }
     [Serializable]
     public struct ServerInfo
@@ -38,6 +39,10 @@ namespace Witcher3_Multiplayer.ClientHost
             y = Y;
             z = Z;
         }
+        override public string ToString()
+        {
+            return Math.Round(x) + ", " + Math.Round(y) + ", " + Math.Round(z);
+        }
     }
     [Serializable]
     public struct Quaternion
@@ -51,6 +56,10 @@ namespace Witcher3_Multiplayer.ClientHost
             y = Y;
             z = Z;
         }
+        override public string ToString()
+        {
+            return Math.Round(x) + ", " + Math.Round(y) + ", " + Math.Round(z);
+        }
     }
     [Serializable]
     public struct Vector2
@@ -61,6 +70,10 @@ namespace Witcher3_Multiplayer.ClientHost
         {
             x = X;
             y = Y;
+        }
+        override public string ToString()
+        {
+            return Math.Round(x) + ", " + Math.Round(y);
         }
     }
     [Serializable]
@@ -192,12 +205,16 @@ namespace Witcher3_Multiplayer.ClientHost
             SND_SAVEFILE,
             SND_DISCONNECTED,
             SND_PLAYERPOSITION,
+            SND_PLAYERONHORSE,
+            SND_PLAYERHORSEPOSITION,
             SND_PLAYERROTATION,
             SND_PLAYERSTATE,
 
             //RCV-TOCLIENT TYPES
             RCV_ACCESSSHELL,
+            RCV_PLAYERONHORSE,
             RCV_HOSTINFO,
+            RCV_PLAYERHORSEPOSITION,
             RCV_PLAYERINFO,
             RCV_COMMANDRESPONSE,
             RCV_PLAYERPOSITION,

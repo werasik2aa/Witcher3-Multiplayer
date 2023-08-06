@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using Witcher3_Multiplayer.Game;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
@@ -14,11 +15,11 @@ namespace Witcher3_Multiplayer.ClientHost
         private static UdpClient UDP_SERVER;
         private static ServerInfo host_data;
         private static string ServerName = "EBalo";
-        private static int MaxP = 5340;
         private static string Password = "NET";
         private static bool CommandShell = false;
         private static bool SV_CHEATS = false;
-        public async static void CreateServer(int port, string Name, bool RCON, string password = "")
+        private static int MaxPlayers = 1;
+        public async static void CreateServer(int port, string Name, int MaxP, bool RCON, string password = "")
         {
             if (!SocketManager.GameSocket.Connected)
             {
@@ -41,6 +42,7 @@ namespace Witcher3_Multiplayer.ClientHost
                 return;
             }
             LOG("Creating Server");
+            MaxPlayers = MaxP;
             CommandShell = RCON;
             Password = password;
             ServerName = Name;
@@ -66,11 +68,6 @@ namespace Witcher3_Multiplayer.ClientHost
                 int ahead = BitConverter.ToInt16(header4, 0);
                 byte[] recvdata = data.Skip(4).ToArray();
                 RecvSendTypes head = (RecvSendTypes)ahead;
-                if (debug)
-                {
-                    //LOG("[host] Recv Packet: " + head.ToString());
-                    //LOG("[host] Recv data: " + recvdata.Length);
-                }
                 switch (head)
                 {
                     case RecvSendTypes.RET_ACCESS:
@@ -102,7 +99,7 @@ namespace Witcher3_Multiplayer.ClientHost
                         host_data = new ServerInfo()
                         {
                             Name = ServerName,
-                            MaxPlayers = MaxP,
+                            MaxPlayers = MaxPlayers,
                             CurPlayers = GameManagerMY.GetCurrentPlayers(),
                             Version = VersionCur
                         };
@@ -125,13 +122,10 @@ namespace Witcher3_Multiplayer.ClientHost
                         if (PlayerDataServer.ContainsKey(fromclie)) 
                         { 
                             var a = PlayerDataServerDATAS[PlayerDataServer[fromclie]];
-                            a.rot = BitConverter.ToInt16(recvdata, 0);
+                            a.PlayerPosition = recvdata.ToStructure<Vector3>();
                             PlayerDataServerDATAS[PlayerDataServer[fromclie]] = a;
                             HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERPOSITION, recvdata);
                         }
-                        break;
-                    case RecvSendTypes.SND_PLAYERROTATION:
-                        
                         break;
                     case RecvSendTypes.SND_PLAYERSTATE:
                         if (PlayerDataServer.ContainsKey(fromclie))
@@ -140,6 +134,15 @@ namespace Witcher3_Multiplayer.ClientHost
                             aa.State = BitConverter.ToInt16(recvdata, 0);
                             PlayerDataServerDATAS[PlayerDataServer[fromclie]] = aa;
                             HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERSTATE, recvdata);
+                        }
+                        break;
+                    case RecvSendTypes.SND_PLAYERHORSEPOSITION:
+                        if (PlayerDataServer.ContainsKey(fromclie))
+                        {
+                            var aa = PlayerDataServerDATAS[PlayerDataServer[fromclie]];
+                            aa.HorsePosition = recvdata.ToStructure<Vector3>();
+                            PlayerDataServerDATAS[PlayerDataServer[fromclie]] = aa;
+                            HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERONHORSE, recvdata);
                         }
                         break;
                 }

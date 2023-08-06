@@ -113,6 +113,8 @@ namespace Witcher3_Multiplayer.Game
         /// <returns></returns>
         public static byte[] Execute(string command)
         {
+            //if(langproc.debug)
+               // langproc.LOG("exec: " + command);
             return Initzero()
                     .AppendUtf8(NsRemote)
                     .AppendInt32(unchecked((Int32)0x12345678))

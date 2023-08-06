@@ -5,6 +5,7 @@ using Witcher3_Multiplayer.Game;
 using static Witcher3_Multiplayer.langproc;
 using Witcher3_Multiplayer.ClientHost;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace Witcher3_Multiplayer
 {
@@ -24,7 +25,7 @@ namespace Witcher3_Multiplayer
             MForm.Hide();
             var a = Task.Run(() =>
             {
-                ServerV2.CreateServer(33299, "COCKFUCK", false);
+                //ServerV2.CreateServer(33299, "COCKFUCK", false);
             });
             await a;
             OverlForm.Show();
@@ -32,63 +33,73 @@ namespace Witcher3_Multiplayer
 
         private async void Connect_Click(object sender, EventArgs e)
         {
-
-            var a = Task.Run(() =>
+            if (!IsConnected)
             {
-                if (!SocketManager.IsConnected())
+                int port = int.Parse(Regex.Replace(ServerCONPORTtext.Text, "[^0-9]", ""));
+                var a = Task.Run(() =>
                 {
-                    if (SocketManager.ConnectToGame())
+                    if (!SocketManager.IsConnected())
+                    {
+                        if (SocketManager.ConnectToGame())
+                        {
+                            var c = Task.Run(() =>
+                            {
+                                ClientV2.Connect(NickNameTEXT.Text, CharacterSelectorTEXT.Text, ServerIPCONTEXT.Text, port, false);
+                            });
+                        }
+                    }
+                    else
                     {
                         var c = Task.Run(() =>
                         {
-                            ClientV2.Connect(IPPORT.Text, 33299, false);
+                            ClientV2.Connect(NickNameTEXT.Text, CharacterSelectorTEXT.Text, CharacterSelectorTEXT.Text, port, false);
                         });
                     }
-                }
-                else
-                {
-                    var c = Task.Run(() =>
-                    {
-                        ClientV2.Connect(IPPORT.Text, 33299, false);
-                    });
-                }
-            });
-            await a;
+                });
+                await a;
+            }
         }
 
         private async void HostBTN_Click(object sender, EventArgs e)
         {
-            var a = Task.Run(() =>
+            debug = DebugCheck.Checked;
+            TESTMYCLIENT = DebugTestClient.Checked;
+            int serverport = int.Parse(Regex.Replace(ServerPORTTEXT.Text, "[^0-9]", ""));
+            int serverMAXP = int.Parse(Regex.Replace(MaxPlTEXT.Text, "[^0-9]", ""));
+            if (!IsHost)
             {
-                if (!SocketManager.IsConnected())
+                var a = Task.Run(() =>
                 {
-                    if (SocketManager.ConnectToGame())
+                    if (!SocketManager.IsConnected())
+                    {
+                        if (SocketManager.ConnectToGame())
+                        {
+                            var b = Task.Run(() =>
+                            {
+                                ServerV2.CreateServer(serverport, ServerNAMETEXT.Text, serverMAXP, ConsoleRCON.Checked, ConsolePASSWDText.Text);
+                            });
+                            Thread.Sleep(200);
+                            var c = Task.Run(() =>
+                            {
+                                ClientV2.Connect(NickNameTEXT.Text, CharacterSelectorTEXT.Text, "127.0.0.1", serverport, ConsoleRCON.Checked);
+                            });
+                        }
+                    }
+                    else
                     {
                         var b = Task.Run(() =>
-                    {
-                        ServerV2.CreateServer(33299, "COCKFUCK", false);
-                    });
+                        {
+                            ServerV2.CreateServer(serverport, ServerNAMETEXT.Text, serverMAXP, ConsoleRCON.Checked, ConsolePASSWDText.Text);
+                        });
                         Thread.Sleep(200);
                         var c = Task.Run(() =>
                         {
-                            ClientV2.Connect("127.0.0.1", 33299, false);
+                            ClientV2.Connect(NickNameTEXT.Text, CharacterSelectorTEXT.Text, "127.0.0.1", serverport, ConsoleRCON.Checked);
                         });
                     }
-                }
-                else
-                {
-                    var b = Task.Run(() =>
-                    {
-                        ServerV2.CreateServer(33299, "COCKFUCK", false);
-                    });
-                    Thread.Sleep(200);
-                    var c = Task.Run(() =>
-                    {
-                        ClientV2.Connect("127.0.0.1", 33299, false);
-                    });
-                }
-            });
-            await a;
+                });
+                await a;
+            }
         }
 
         private async void CmdBTN_Click(object sender, EventArgs e)
@@ -96,12 +107,19 @@ namespace Witcher3_Multiplayer
             var a = Task.Run(() =>
             {
                 if (!SocketManager.IsConnected())
+                {
                     if (SocketManager.ConnectToGame())
                         LOG(GameManagerMY.ExecConsoleCommand(CMDb.Text));
+                }
                 else
                     LOG(GameManagerMY.ExecConsoleCommand(CMDb.Text));
             });
             await a;
+        }
+
+        private void SettingsBTN_Click(object sender, EventArgs e)
+        {
+            SettingsLBOX.Visible = !SettingsLBOX.Visible;
         }
     }
 }

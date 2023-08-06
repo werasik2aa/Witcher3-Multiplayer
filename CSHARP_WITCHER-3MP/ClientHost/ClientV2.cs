@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Witcher3_Multiplayer.Game;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
 using static Witcher3_Multiplayer.langproc;
@@ -17,12 +17,15 @@ namespace Witcher3_Multiplayer.ClientHost
         private static ServerInfo ConnectedInfo;
         private static IPEndPoint ConnectedEPOINT;
         private static int MyId;
-        public async static void Connect(string address, int port, bool RCON, string Password = "")
+        private static string MyName;
+        private static bool HorseRiding = false;
+        private static string MyCharacter;
+        public async static void Connect(string nick, string chara, string address, int port, bool RCON, string Password = "")
         {
-            LOG("Verifying game satate");
+            LOG("[client] Verifying game satate");
             if (!SocketManager.IsConnected())
             {
-                LOG("[host] Please start game first!");
+                LOG("[client] Please start game first!");
                 return;
             }
             if (GameManagerUI.IsInMenu() & GameManagerUI.IsGameStoped() & GameManagerUI.IsGamePaused())
@@ -42,10 +45,14 @@ namespace Witcher3_Multiplayer.ClientHost
                 return;
             }
             LOG("Connecting to " + address + ":" + port);
-            ConnectedEPOINT = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+            ConnectedEPOINT = new IPEndPoint(IPAddress.Parse(address), port);
             UDP_CLIENT = new UdpClient(address, port);
             RCON = RCON ? AccessShell(Password) : RCON;
             IsConnected = true;
+            MyName = nick;
+            MyCharacter = chara;
+            GameManagerMY.SpawnHorseLOCAL();
+            Thread.Sleep(200); // JUST WAIT WHEN HORSE SUMMONS TO PLAYER! and be near not far!
             ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.RET_CONNECTED);
             while (true)
             {
@@ -55,12 +62,17 @@ namespace Witcher3_Multiplayer.ClientHost
                     break;
                 }
                 var f = await UDP_CLIENT.ReceiveAsync();
-                OperateWithData(f.Buffer);
                 if (IsConnected)
                 {
+                    var isonhorse = GameManagerMY.GetPlayerIsOnHorse();
+                    if (isonhorse != HorseRiding)
+                        ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERONHORSE, BitConverter.GetBytes(HorseRiding = isonhorse));
                     ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERPOSITION, GameManagerMY.GetPlayerPosition());
-                    ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERSTATE, GameManagerMY.GetPlayerMovingType());
+                    if (isonhorse)
+                        ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERHORSEPOSITION, GameManagerMY.GetPlayerHorsePosition());
                 }
+                OperateWithData(f.Buffer);
+                Thread.Sleep(SendDataDelay);
             }
         }
         public static bool AccessShell(string Password)
@@ -81,11 +93,6 @@ namespace Witcher3_Multiplayer.ClientHost
                 int ahead = BitConverter.ToInt16(header4, 0);
                 byte[] recvdata = data.Skip(8).ToArray();
                 RecvSendTypes head = (RecvSendTypes)ahead;
-                if (debug)
-                {
-                    //LOG("[client] Recv Packet: " + head.ToString());
-                    //LOG("[client] Recv data: " + recvdata.Length);
-                }
                 switch (head)
                 {
                     case RecvSendTypes.RCV_PLAYERINFO:
@@ -96,7 +103,7 @@ namespace Witcher3_Multiplayer.ClientHost
                             LOG("[client] NickName: " + iiii.NickName);
                             LOG("[client] Player ID: " + iiii.ID);
                             PlayerDataClient.Add(iiii.ID, iiii);
-                            GameManagerMY.Spawn_Player(iiii.NickName, iiii.ID, "characters\\npc_entities\\secondary_npc\\letho.w2ent", iiii.pos, new Quaternion(0, 0, 0));
+                            GameManagerMY.Spawn_Player(iiii.NickName, iiii.ID, iiii.CharacterTemplate, iiii.PlayerPosition);
                         }
                         break;
                     case RecvSendTypes.RCV_COMMANDRESPONSE:
@@ -105,19 +112,14 @@ namespace Witcher3_Multiplayer.ClientHost
                     case RecvSendTypes.RCV_HOSTINFO:
                         INITDATA(recvdata);
                         break;
+                    case RecvSendTypes.RCV_PLAYERONHORSE:
+                        GameManagerMY.SetPlayerIsOnHorse(IDClient, BitConverter.ToBoolean(recvdata, 0) ? 1 : 0);
+                        break;
                     case RecvSendTypes.RCV_PLAYERPOSITION:
                         var vect = recvdata.ToStructure<Vector3>();
-                        GameManagerMY.SetFollowToPlayer(IDClient, vect);
-                        GameManagerMY.SetPlayerHeading(IDClient, vect);
-                        break;
-                    case RecvSendTypes.RCV_PLAYERROTATION:
-                        
-                        break;
-                    case RecvSendTypes.RCV_PLAYERSTATE:
-                        GameManagerMY.SetPlayerMovingType(IDClient, BitConverter.ToInt16(recvdata, 0));
+                        GameManagerMY.SetPlayerMoveTo(IDClient, vect);
                         break;
                 }
-                Thread.Sleep(SendDataDelay);
             }
         }
         public static void INITDATA(byte[] recvdata)
@@ -132,19 +134,21 @@ namespace Witcher3_Multiplayer.ClientHost
                     player_data = new PlayerData()
                     {
                         ID = ServerResp.YourID,
-                        NickName = "Werasik2aa",
+                        NickName = MyName,
                         HP = GameManagerMY.GetPlayerHP(),
                         LevelID = GameManagerMY.GetPlayerAreaID(),
                         Plevel = GameManagerMY.GetPlayerLevel(),
-                        pos = GameManagerMY.GetPlayerPosition(),
-                        rot = GameManagerMY.GetPlayerHeading(),
-                        State = GameManagerMY.GetPlayerStateInt()
+                        PlayerPosition = GameManagerMY.GetPlayerPosition(),
+                        HorsePosition = GameManagerMY.GetPlayerHorsePosition(),
+                        State = GameManagerMY.GetPlayerStateInt(),
+                        CharacterTemplate = MyCharacter
                     };
                     if (debug) LOG("[pre] Sending Player Data to host");
                     ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.RET_PLAYERDATAS);
                     ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERINFO, player_data.ToByteArray());
                     IsConnected = true;
                     ConnectedInfo = ServerResp;
+                    MyId = ServerResp.YourID;
                     if (debug) LOG("[pre] Starting Data sender Of my CLient!");
                 }
                 else

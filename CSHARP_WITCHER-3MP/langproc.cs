@@ -16,7 +16,7 @@ namespace Witcher3_Multiplayer
         public static bool debug = true;
         public static bool TESTMYCLIENT = true;
         public static double VersionCur = 1.0;
-        public static int SendDataDelay = 500;
+        public static int SendDataDelay = 200;
         public static Main MForm;
         public static SimpleOverlay OverlForm;
         public static bool IsHost = false, IsConnected = false;
