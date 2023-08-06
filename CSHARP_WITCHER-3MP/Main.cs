@@ -17,6 +17,8 @@ namespace Witcher3_Multiplayer
             LOGGERB = LogBoxman;
             MForm = this;
             OverlForm = new SimpleOverlay();
+            foreach(var a in DataTypes.NpcsPlayer)
+                CharacterSelectorTEXT.Items.Add(a);
         }
 
         private async void RunGame_Click(object sender, EventArgs e)
