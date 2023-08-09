@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -67,6 +68,7 @@ namespace Witcher3_Multiplayer.ClientHost
             {
                 while (true)
                 {
+                    Thread.Sleep(SendDataDelay);
                     foreach (var item in PlayerDataServer)
                     {
                         HostSender.SendDataToAllExceptOne(UDP_SERVER, item.Key, (int)RecvSendTypes.RCV_PLAYERPOSITION, PlayerDataServerDATAS[item.Value].PlayerPosition.ToByteArray());
