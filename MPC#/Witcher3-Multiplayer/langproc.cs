@@ -17,9 +17,9 @@ namespace Witcher3_Multiplayer
             TESTMYCLIENT = false,
             debug = true;
         public static double VersionCur = 1.0;
-        public static int SendDataDelay = 32;
+        public static int SendDataDelay = 16;
         public static Main MForm;
-        public static SimpleOverlay OverlForm;
+        public static SimpleOverlayFORWINDOWEDMODE OverlForm;
         public static string MonstersPath = "characters\\npc_entities\\monsters\\";//+MONSTERNAME
         public static Dictionary<int, PlayerData> PlayerDataClient = new Dictionary<int, PlayerData>();
         public static Dictionary<int, PlayerData> PlayerDataServerDATAS = new Dictionary<int, PlayerData>();

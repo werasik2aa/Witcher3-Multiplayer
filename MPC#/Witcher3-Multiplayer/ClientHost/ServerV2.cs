@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Witcher3_Multiplayer.Game;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
@@ -48,6 +49,7 @@ namespace Witcher3_Multiplayer.ClientHost
             IsHost = true;
             UDP_SERVER = new UdpClient(port);
             LOG("Server Created!");
+            SendPlayersData();
             while (true)
             {
                 if (!SocketManager.GameSocket.Connected)
@@ -58,6 +60,20 @@ namespace Witcher3_Multiplayer.ClientHost
                 var result = await UDP_SERVER.ReceiveAsync();
                 OperateWithData(result.Buffer, result.RemoteEndPoint);
             }
+        }
+        public static void SendPlayersData()
+        {
+            var a = Task.Run(() =>
+            {
+                while (true)
+                {
+                    foreach (var item in PlayerDataServer)
+                    {
+                        HostSender.SendDataToAllExceptOne(UDP_SERVER, item.Key, (int)RecvSendTypes.RCV_PLAYERPOSITION, PlayerDataServerDATAS[item.Value].PlayerPosition.ToByteArray());
+                        HostSender.SendDataToAllExceptOne(UDP_SERVER, item.Key, (int)RecvSendTypes.RCV_PLAYERONHORSE, PlayerDataServerDATAS[item.Value].HorsePosition.ToByteArray());
+                    }
+                }  
+            });
         }
         public static void OperateWithData(byte[] data, IPEndPoint fromclie)
         {
@@ -138,7 +154,6 @@ namespace Witcher3_Multiplayer.ClientHost
                             var a = PlayerDataServerDATAS[PlayerDataServer[fromclie]];
                             a.PlayerPosition = recvdata.ToStructure<Vector3>();
                             PlayerDataServerDATAS[PlayerDataServer[fromclie]] = a;
-                            HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERPOSITION, recvdata);
                         }
                         break;
                     case RecvSendTypes.SND_PLAYERHORSEPOSITION:
@@ -147,7 +162,6 @@ namespace Witcher3_Multiplayer.ClientHost
                             var aa = PlayerDataServerDATAS[PlayerDataServer[fromclie]];
                             aa.HorsePosition = recvdata.ToStructure<Vector3>();
                             PlayerDataServerDATAS[PlayerDataServer[fromclie]] = aa;
-                            HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERONHORSE, recvdata);
                         }
                         break;
                     case RecvSendTypes.SND_PLAYERONHORSE:
@@ -158,15 +172,24 @@ namespace Witcher3_Multiplayer.ClientHost
                         }
                         break;
                     case RecvSendTypes.SND_PLAYERCOMBATTARGET:
-                        HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERCOMBATTARGET, recvdata);
+                        if (PlayerDataServer.ContainsKey(fromclie))
+                        {
+                            HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERCOMBATTARGET, recvdata);
+                        }
                         break;
                     case RecvSendTypes.SND_PLAYERCOMBATTARGETKILL:
-                        if (debug) LOG("[host] PlayerID " + IDClient + " kill the entity");
-                        HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERCOMBATTARGETKILL, recvdata);
+                        if (PlayerDataServer.ContainsKey(fromclie))
+                        {
+                            if (debug) LOG("[host] PlayerID " + IDClient + " kill the entity");
+                            HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERCOMBATTARGETKILL, recvdata);
+                        }
                         break;
                     case RecvSendTypes.SND_CHATMSG:
-                        LOG("Recieve PlayerID " + IDClient + " MSG:" + Encoding.UTF8.GetString(recvdata));
-                        HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_CHATMSG, recvdata);
+                        if (PlayerDataServer.ContainsKey(fromclie))
+                        {
+                            LOG("Recieve PlayerID " + IDClient + " MSG:" + Encoding.UTF8.GetString(recvdata));
+                            HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_CHATMSG, recvdata);
+                        }
                         break;
                 }
             }

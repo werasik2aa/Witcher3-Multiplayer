@@ -61,38 +61,48 @@ namespace Witcher3_Multiplayer.ClientHost
                     break;
                 }
                 var f = await UDP_CLIENT.ReceiveAsync();
-                if (IsConnected)
-                {
-                    ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERPOSITION, GameManagerMY.GetPlayerPosition());
-                    var isonhorse = GameManagerMY.GetPlayerIsOnHorse();
-                    if (isonhorse != HorseRiding)
-                    {
-                        if(debug) LOG("Sending data ImOnHorse: " + (HorseRiding = isonhorse));
-                        ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERONHORSE, BitConverter.GetBytes(HorseRiding));
-                    }
-                    var myCombat = GameManagerMY.GetCombatTargetGuid();
-                    if (myCombat != 0)
-                    {
-                        if (myCombat != CombatGuid)
-                        {
-                            currentCombat = new CombatTarget()
-                            {
-                                Guid = CombatGuid = GameManagerMY.GetCombatTargetGuid(),
-                                Template = GameManagerMY.GetCombatTargetName()
-                            };
-                            if (debug) LOG("[FightSystem] Player TargetInSight Send: " + CombatGuid);
-                            ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERCOMBATTARGET, currentCombat.ToByteArray());
-                        } else if (GameManagerMY.GetCombatTargetIsDead()) {
-                            if (debug)
-                                LOG("[FightSystem] Player KILL entity send: " + CombatGuid);
-                            ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERCOMBATTARGETKILL, currentCombat.ToByteArray());
-                            CombatGuid = 0;
-                        }
-                    }
-                    Thread.Sleep(SendDataDelay);
-                }
                 OperateWithData(f.Buffer);
             }
+        }
+        public static void SendMyData()
+        {
+            var a = Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (IsConnected)
+                    {
+                        ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERPOSITION, GameManagerMY.GetPlayerPosition());
+                        var isonhorse = GameManagerMY.GetPlayerIsOnHorse();
+                        if (isonhorse != HorseRiding)
+                        {
+                            if (debug) LOG("Sending data ImOnHorse: " + (HorseRiding = isonhorse));
+                            ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERONHORSE, BitConverter.GetBytes(HorseRiding));
+                        }
+                        var myCombat = GameManagerMY.GetCombatTargetGuid();
+                        if (myCombat != 0)
+                        {
+                            if (myCombat != CombatGuid)
+                            {
+                                currentCombat = new CombatTarget()
+                                {
+                                    Guid = CombatGuid = GameManagerMY.GetCombatTargetGuid(),
+                                    Template = GameManagerMY.GetCombatTargetName()
+                                };
+                                if (debug) LOG("[FightSystem] Player TargetInSight Send: " + CombatGuid);
+                                ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERCOMBATTARGET, currentCombat.ToByteArray());
+                            }
+                            else if (GameManagerMY.GetCombatTargetIsDead())
+                            {
+                                if (debug)
+                                    LOG("[FightSystem] Player KILL entity send: " + CombatGuid);
+                                ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_PLAYERCOMBATTARGETKILL, currentCombat.ToByteArray());
+                                CombatGuid = 0;
+                            }
+                        }
+                    }
+                }
+            });
         }
         public static bool AccessShell(string Password)
         {
@@ -136,12 +146,9 @@ namespace Witcher3_Multiplayer.ClientHost
                         break;
                     case RecvSendTypes.RCV_PLAYERONHORSE:
                         var aaaa = BitConverter.ToBoolean(recvdata, 0);
-                        if (debug)
-                            LOG("[client] Receive player " + IDClient + " OnHorse: " + aaaa);
                         GameManagerMY.SetPlayerIsOnHorse(IDClient, aaaa ? 1 : 0);
                         break;
                     case RecvSendTypes.RCV_PLAYERPOSITION:
-                        LOG("POSRECV : " + recvdata.ToStructure<Vector3>());
                         GameManagerMY.SetPlayerMoveTo(IDClient, recvdata.ToStructure<Vector3>());
                         break;
                     case RecvSendTypes.RCV_PLAYERCOMBATTARGET:
@@ -185,6 +192,7 @@ namespace Witcher3_Multiplayer.ClientHost
                     IsConnected = true;
                     if(!TESTMYCLIENT)PlayerDataClient.Add(player_data.ID, player_data);
                     ConnectedInfo = ServerResp;
+                    SendMyData();
                 }
                 else
                 {

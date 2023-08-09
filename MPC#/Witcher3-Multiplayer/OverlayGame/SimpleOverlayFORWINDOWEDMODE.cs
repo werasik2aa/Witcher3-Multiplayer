@@ -13,10 +13,10 @@ using static Witcher3_Multiplayer.ClientHost.DataTypes;
 using static Witcher3_Multiplayer.langproc;
 namespace Witcher3_Multiplayer
 {
-    public partial class SimpleOverlay : Form
+    public partial class SimpleOverlayFORWINDOWEDMODE : Form
     {
         private bool enaMY;
-        public SimpleOverlay()
+        public SimpleOverlayFORWINDOWEDMODE()
         {
             TopMost = true;
             FormBorderStyle = FormBorderStyle.None;

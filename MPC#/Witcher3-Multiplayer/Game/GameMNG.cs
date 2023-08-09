@@ -164,59 +164,87 @@ namespace Witcher3_Multiplayer.Game
         }
         public static Vector3 GetPlayerPosition()
         {
-            SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentPosition"));
-            string raw = SocketManager.ReciveData_DoWork();
-            if (CheckData(raw) || !raw.Contains(".") || !raw.Contains("playerAP")) GetPlayerPosition();
-            string[] splitted = raw.Replace("WITCHER-3MP ", "").Replace("playerAP", "").Trim().Replace('.', ',').Split(' ');
-            Vector3 f = new Vector3()
+            try
             {
-                x = float.Parse(splitted[0]),
-                y = float.Parse(splitted[1]),
-                z = float.Parse(splitted[2])
-            };
-            return f;
+                SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentPosition"));
+                string raw = SocketManager.ReciveData_DoWork();
+                if (CheckData(raw) || !raw.Contains(".") || !raw.Contains("playerAP")) GetPlayerPosition();
+                string[] splitted = raw.Replace("WITCHER-3MP ", "").Replace("playerAP", "").Trim().Replace('.', ',').Split(' ');
+                Vector3 f = new Vector3()
+                {
+                    x = float.Parse(splitted[0]),
+                    y = float.Parse(splitted[1]),
+                    z = float.Parse(splitted[2])
+                };
+                return f;
+            }
+            catch
+            {
+                return GetPlayerPosition();
+            }
         }
         public static Quaternion GetCurrentRotation()
         {
-            SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentRotation"));
-            string raw = SocketManager.ReciveData_DoWork();
-            if (CheckData(raw) || !raw.Contains(".")) GetCurrentRotation();
-            string[] splitted = raw.Replace("WITCHER-3MP ", "").Trim().Replace('.', ',').Split(' ');
-            Quaternion f = new Quaternion()
+            try
             {
-                x = float.Parse(splitted[0]),
-                y = float.Parse(splitted[1]),
-                z = float.Parse(splitted[2])
-            };
-            return f;
+                SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentRotation"));
+                string raw = SocketManager.ReciveData_DoWork();
+                if (CheckData(raw) || !raw.Contains(".")) GetCurrentRotation();
+                string[] splitted = raw.Replace("WITCHER-3MP ", "").Trim().Replace('.', ',').Split(' ');
+                Quaternion f = new Quaternion()
+                {
+                    x = float.Parse(splitted[0]),
+                    y = float.Parse(splitted[1]),
+                    z = float.Parse(splitted[2])
+                };
+                return f;
+            }
+            catch
+            {
+                return GetCurrentRotation();
+            }
         }
         public static Vector3 GetPlayerHorsePosition()
         {
-            SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentHorsePosition"));
-            string raw = SocketManager.ReciveData_DoWork();
-            if (CheckData(raw) || !raw.Contains(".") || !raw.Contains("horseAP")) GetPlayerPosition();
-            string[] splitted = raw.Replace("WITCHER-3MP ", "").Replace("horseAP", "").Trim().Replace('.', ',').Split(' ');
-            Vector3 f = new Vector3()
+            try
             {
-                x = float.Parse(splitted[0]),
-                y = float.Parse(splitted[1]),
-                z = float.Parse(splitted[2])
-            };
-            return f;
+                SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentHorsePosition"));
+                string raw = SocketManager.ReciveData_DoWork();
+                if (CheckData(raw) || !raw.Contains(".") || !raw.Contains("horseAP")) GetPlayerPosition();
+                string[] splitted = raw.Replace("WITCHER-3MP ", "").Replace("horseAP", "").Trim().Replace('.', ',').Split(' ');
+                Vector3 f = new Vector3()
+                {
+                    x = float.Parse(splitted[0]),
+                    y = float.Parse(splitted[1]),
+                    z = float.Parse(splitted[2])
+                };
+                return f;
+            }
+            catch
+            {
+                return GetPlayerHorsePosition();
+            }
         }
         public static Quaternion GetPlayerRotationWorld()
         {
-            SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentRotation"));
-            string raw = SocketManager.ReciveData_DoWork();
-            if (CheckData(raw) || !raw.Contains(".")) return GetPlayerRotationWorld();
-            string[] splitted = raw.Replace("WITCHER-3MP ", "").Replace('.', ',').Split(' ');
-            Quaternion f = new Quaternion()
+            try
             {
-                x = float.Parse(splitted[0]),
-                y = float.Parse(splitted[1]),
-                z = float.Parse(splitted[2])
-            };
-            return f;
+                SocketManager.Send(SocketManager.GameSocket, Convertors.Execute("GetCurrentRotation"));
+                string raw = SocketManager.ReciveData_DoWork();
+                if (CheckData(raw) || !raw.Contains(".")) return GetPlayerRotationWorld();
+                string[] splitted = raw.Replace("WITCHER-3MP ", "").Replace('.', ',').Split(' ');
+                Quaternion f = new Quaternion()
+                {
+                    x = float.Parse(splitted[0]),
+                    y = float.Parse(splitted[1]),
+                    z = float.Parse(splitted[2])
+                };
+                return f;
+            }
+            catch
+            {
+                return GetPlayerRotationWorld();
+            }
         }
         public static bool GetPlayerIsOnHorse()
         {

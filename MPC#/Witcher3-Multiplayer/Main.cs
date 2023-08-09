@@ -22,7 +22,7 @@ namespace Witcher3_Multiplayer
             InitializeComponent();
             LOGGERB = LogBoxman;
             MForm = this;
-            OverlForm = new SimpleOverlay();
+            OverlForm = new SimpleOverlayFORWINDOWEDMODE();
             foreach(var a in DataTypes.NpcsPlayer)
                 CharacterSelectorTEXT.Items.Add(a);
             CharacterSelectorTEXT.SelectedIndex = 1;

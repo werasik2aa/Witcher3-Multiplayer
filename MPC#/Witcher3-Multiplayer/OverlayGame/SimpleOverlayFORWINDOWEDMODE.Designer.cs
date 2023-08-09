@@ -1,6 +1,6 @@
 ﻿namespace Witcher3_Multiplayer
 {
-    partial class SimpleOverlay
+    partial class SimpleOverlayFORWINDOWEDMODE
     {
         /// <summary>
         /// Required designer variable.

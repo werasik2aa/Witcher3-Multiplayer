@@ -80,7 +80,6 @@ namespace Witcher3_Multiplayer.Game
                     langproc.LOG("ERROR: Socket or Game closed?");
                 }
             }
-            Thread.Sleep(32);
             return returnns;
         }
         public static bool IsConnected()
