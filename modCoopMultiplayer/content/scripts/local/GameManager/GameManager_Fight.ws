@@ -7,8 +7,8 @@ exec function Attack(idcl:int, attackint:int, GuidHash:int)
     var daction : EBufferActionType;
     data = getStorage();
     entity = data.getPlayerOBJ(idcl);
-    if(GuidHash != 0 && attackint != 0) {
-        entityAT = data.getNPC(GuidHash);
+    entityAT = data.getNPC(GuidHash);
+    if(GuidHash != 0 && attackint != 0 && GuidHash != entity.GetGuidHash()) {
         if(entity.IsUsingHorse()){
             if(attackint == 1)
                 ((CActor)entity).SetBehaviorVariable( 'actionType', (int)EHCA_Attack );
@@ -39,5 +39,5 @@ exec function Attack(idcl:int, attackint:int, GuidHash:int)
         _SetCombatTarget(entity, entityAT);
     }
     else
-        _ResetCombatTarget(entity);
+        _ResetCombatTarget(entity, entityAT);
 }

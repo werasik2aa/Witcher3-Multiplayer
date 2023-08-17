@@ -38,7 +38,6 @@ class Storage {
   public var NpcGUIDS : array<int>;
   public var DebugMode : bool;
   public var MaxPlayers, CurPlayers : int;
-  public var W3MP_MANAGER : WITCHER_3MP;
   public function addPlayer(obj:CNewNPC, objhorse:CNewNPC, Header:int)
   {
     PlayerOBJECTS.PushBack(obj);

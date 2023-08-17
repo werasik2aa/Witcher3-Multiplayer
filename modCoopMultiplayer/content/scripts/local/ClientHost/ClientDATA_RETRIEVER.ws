@@ -23,15 +23,17 @@ exec function GetCurrentPLevel()
 }
 exec function GetCurrentPosition()
 {
-    Log("W3MP playerAP" + VecToString(GetWitcherPlayer().GetWorldPosition()));
+    var pos:Vector;
+    pos = GetWitcherPlayer().GetWorldPosition();
+    Log("W3MP " + (int)pos.X + " " + (int)pos.Y + " " + (int)pos.Z);
 }
 exec function GetCurrentHorsePosition()
 {
-    Log("W3MP horseAP" + VecToString(GetWitcherPlayer().GetHorseWithInventory().GetWorldPosition()));
+    Log("W3MP " + VecToString(GetWitcherPlayer().GetHorseWithInventory().GetWorldPosition()));
 }
 exec function IsOnHorse()
 {
-    Log("W3MP ONH" + GetWitcherPlayer().IsUsingHorse());
+    Log("W3MP " + GetWitcherPlayer().IsUsingHorse());
 }
 exec function GetCurrentRotation()
 {
@@ -98,19 +100,19 @@ exec function GetFightSwStateName()
     var cact : EBufferActionType;
     cact = GetWitcherPlayer().GetCombatAction();
     if(cact == EBAT_EMPTY)
-        Log("W3MP F0");
+        Log("W3MP 0");
     if(cact == EBAT_LightAttack)
-        Log("W3MP F1");
+        Log("W3MP 1");
     if(cact == EBAT_HeavyAttack)
-        Log("W3MP F2");
+        Log("W3MP 2");
     if(cact == EBAT_SpecialAttack_Light)
-        Log("W3MP F3");
+        Log("W3MP 3");
     if(cact== EBAT_SpecialAttack_Heavy)
-        Log("W3MP F4");
+        Log("W3MP 4");
     if(cact == EBAT_Parry)
-        Log("W3MP F5");
+        Log("W3MP 5");
     if(cact == EBAT_Dodge)
-        Log("W3MP F6");
+        Log("W3MP 6");
 }
 exec function IsCombatTargetDead(guid:int)
 {
@@ -120,7 +122,7 @@ exec function IsCombatTargetDead(guid:int)
 }
 exec function IsInCombat()
 {
-    Log("W3MP OHC" + GetWitcherPlayer().IsInCombatAction());
+    Log("W3MP " + GetWitcherPlayer().IsInCombatAction());
 }
 exec function GG() : int
 {

@@ -7,7 +7,7 @@ function _SpawnIT(nameenti:string, npc_templ:string, position:Vector, fullname:b
     data = getStorage();
     template = (CEntityTemplate)LoadResource(npc_templ, fullname);
     entity = (CNewNPC)theGame.CreateEntity(template, position,EulerAngles(0, 0, 0),,,,PM_DontPersist, tags);
-    ((CActor)entity).SetTemporaryAttitudeGroup('npc_charmed', AGP_Axii);
+    ((CActor)entity).SetTemporaryAttitudeGroup('q104_avallach_friendly_to_all', AGP_Default);
     onelinerEntity(nameenti, entity);//nickname
     return entity;
 }
@@ -56,13 +56,13 @@ function _SetTypeMoveHorse(entity:CNewNPC, st:int)
 function _SetCombatTarget(entity:CNewNPC, entity2:CNewNPC)
 {
   ((CActor)entity).SetTemporaryAttitudeGroup('npc_charmed', AGP_Axii);
-  if( VecDistance(entity.GetWorldPosition(), entity2.GetWorldPosition()) > 2)
-    _Teleport(entity, entity2.GetWorldPosition());
+  if( VecDistance(entity.GetWorldPosition(), entity2.GetWorldPosition()) > 2) _Teleport(entity, entity2.GetWorldPosition());
   ((CActor)entity).SetAttitude( (CActor)entity2, AIA_Hostile );
 }
-function _ResetCombatTarget(entity:CNewNPC)
+function _ResetCombatTarget(entity:CNewNPC, entity2:CNewNPC)
 {
   ((CActor)entity).SetTemporaryAttitudeGroup('q104_avallach_friendly_to_all', AGP_Default);
+  ((CActor)entity).ResetAttitude(entity2);
 }
 function _CheckOrSpawnNPC(GuidHash:int, entiname:string, entity:CNewNPC)
 {
