@@ -52,7 +52,7 @@ function _CalculateHealthEnemy(entity:CNewNPC, ClientSHealth:int)
     var data : Storage;
     data = getStorage();
     if(thePlayer.GetTarget().GetGuidHash() == entity.GetGuidHash() && thePlayer.IsInCombat()) // IF PLAYER 1, 2,.. OTHER ATTACK ONE OBJECT
-        ((CActor)entity).SetHealthPerc(entity.GetCurrentHealth() - ClientSHealth/entity.GetCurrentHealth());
+        ((CActor)entity).SetHealthPerc(entity.GetCurrentHealth() - ClientSHealth/entity.GetCurrentHealth()*100);
     else
         ((CActor)entity).SetHealthPerc(ClientSHealth); //If one play target one object
 }
