@@ -47,7 +47,7 @@ latent function Update2()
            	    _SetTypeMove(entityP, 4);
            	else if(DistanceP > 10)
                	_Teleport(entityP, positionP1);
-			_SetHeading(entityP, positionP1 - positionP2);
+			_SetHeading(entityP, positionP1);
 			//3.
 			if(DistancePH <= 3)
            	    _SetTypeMove(horseEntity, 0);
@@ -57,7 +57,7 @@ latent function Update2()
            	    _SetTypeMove(horseEntity, 4);
            	else if(DistancePH > 20)
                	_Teleport(horseEntity, positionPH1);
-			_SetHeading(horseEntity, positionPH1 - positionPH2);
+			_SetHeading(horseEntity, positionPH1);
        	} else {
 			//3.
            	if(DistancePH <= 3)
@@ -68,7 +68,7 @@ latent function Update2()
            	    _SetTypeMove(horseEntity, 4);
            	else if(DistancePH > 20)
                	_Teleport(horseEntity, positionPH1);
-			_SetHeading(horseEntity, positionPH1 - positionPH2);
+			_SetHeading(horseEntity, positionPH1);
         }
     }
 }
