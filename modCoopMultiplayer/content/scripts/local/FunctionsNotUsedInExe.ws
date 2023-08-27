@@ -67,7 +67,7 @@ function _SpawnITCORPSE(npc_templ:string, position:Vector) : CNewNPC
 function _SetHeading(entity:CNewNPC, targpos:Vector)
 {
   ((CActor)entity).SetRotationTargetPos(targpos);
-  ((CActor)entity).GetMovingAgentComponent().SetGameplayMoveDirection(VecHeading(targpos));
+  //((CActor)entity).GetMovingAgentComponent().SetGameplayMoveDirection(VecHeading(targpos));
   if(getStorage().DebugMode)
         Log("[WITCHER3MP] Setted Heading: " + VecToString(targpos));
 }

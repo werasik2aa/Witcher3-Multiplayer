@@ -39,8 +39,6 @@ latent function Update2()
 				entityP.ChangeStance(NS_Normal);
 			}
 			//2.
-			_SetHeading(entityP, positionP1 - positionP2);
-			entityP.ActionMoveToWithHeading(positionPH1, VecHeading(positionP1 - positionP2), MT_Run, DistanceP*10, 10000);
        	    if(DistanceP <= 2)
            	    _SetTypeMove(entityP, 0);
 			else if(DistanceP < 5)
@@ -49,9 +47,8 @@ latent function Update2()
            	    _SetTypeMove(entityP, 4);
            	else if(DistanceP > 10)
                	_Teleport(entityP, positionP1);
+			_SetHeading(entityP, positionP1 - positionP2);
 			//3.
-			_SetHeading(horseEntity, positionPH1 - positionPH2);
-			horseEntity.ActionMoveToWithHeading(positionPH1, VecHeading(positionP1 - positionP2), MT_Run, DistanceP*10, 10000);
 			if(DistancePH <= 3)
            	    _SetTypeMove(horseEntity, 0);
 			else if(DistanceP < 6)
@@ -60,10 +57,9 @@ latent function Update2()
            	    _SetTypeMove(horseEntity, 4);
            	else if(DistancePH > 20)
                	_Teleport(horseEntity, positionPH1);
+			_SetHeading(horseEntity, positionPH1 - positionPH2);
        	} else {
 			//3.
-			_SetHeading(horseEntity, positionPH1 - positionPH2);
-			horseEntity.ActionMoveToWithHeading(positionPH1, VecHeading(positionP1 - positionP2), MT_Run, DistanceP*10, 10000);
            	if(DistancePH <= 3)
            	    _SetTypeMove(horseEntity, 0);
 			else if(DistanceP < 6)
@@ -72,6 +68,7 @@ latent function Update2()
            	    _SetTypeMove(horseEntity, 4);
            	else if(DistancePH > 20)
                	_Teleport(horseEntity, positionPH1);
+			_SetHeading(horseEntity, positionPH1 - positionPH2);
         }
     }
 }
