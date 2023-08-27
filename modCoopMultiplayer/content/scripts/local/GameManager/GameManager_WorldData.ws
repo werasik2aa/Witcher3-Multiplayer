@@ -12,3 +12,19 @@ exec function GetChestItems()
 {
 	
 }
+exec function GetNearNPCS()
+{
+    var e : string;
+    var i : int;
+    var actors	: array<CActor>;
+    var currhash : int;
+    var actor : CNewNPC;
+    actors = GetActorsInRange(thePlayer, 5);
+	for	( i = 0; i < actors.Size(); i+= 1 )
+	{
+		actor = (CNewNPC)actors[i];
+		currhash = actor.GetGuidHash();
+        e += " ID: " + currhash + " | NAME: " + actor;
+	}
+    Log("W3MP " + e);
+}

@@ -19,8 +19,17 @@ function _sustuninstall(Header: string) {
 	if (storage.hasItem(Header))
 		storage.removeItem(storage.getItem(Header));
 }
-function AddNewPlayerToStorage(obj:CNewNPC, objhorse:CNewNPC, idcl:int) {
+function _DATA_AddPlayer(obj:CNewNPC, objhorse:CNewNPC, idcl:int) {
   getStorage().addPlayer(obj, objhorse, idcl);
+}
+function _Data_AddNPC(e:CNewNPC, guid:int)
+{
+    var data : Storage;
+    data = getStorage();
+    e.AddTag('W3MP');
+    data.NpcEntities.PushBack(e);
+    if(getStorage().DebugMode)
+        Log("[WITCHER3MP] Succesfully Added NPC Entity to list");
 }
 ///CLASSES
 class StorageItem {
