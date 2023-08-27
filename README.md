@@ -1,8 +1,7 @@
 ## Witcher3-Multiplayer 
-#RUN witcher3 shortcut with -net! AND TRY OWN THE BUGGY PROJECT.
-Used This mod for nametagplayers and horse object: https://github.com/Aelto/tw3-shared-utils/tree/master/mod_sharedutils_oneliners
+Run witcher3 game with key -net!
+4.0.4 > If it's first launch delete files "x64.final.redscripts" in folder "...PATH\TO\The Witcher 3 Wild Hunt\content\content0"
 
-##IN DEVELOPPING!
-#FEATURES
-SYNC POSITIONS!
-MY:DS https://discord.com/invite/yahCmFYjKe
+#Sync Positions Horse, Player, 
+Should work battle sync very buggy!(NOT COMPLETED)
+MyMod Dev-DS: https://discord.com/invite/yahCmFYjKe
