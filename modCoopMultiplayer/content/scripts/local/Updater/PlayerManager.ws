@@ -19,7 +19,6 @@ latent function Update2()
 			//1.
 			if (theGame.GetWorld().GetWaterLevel(positionP) > positionP.Z-0.5)
 			{
-				//entityP.EnablePhysicalMovement(true);
 				((CMovingPhysicalAgentComponent)entityP.GetMovingAgentComponent()).SetSwimming(true);
 				((CMovingPhysicalAgentComponent)entityP.GetMovingAgentComponent()).SetDiving(true);
 				((CMovingPhysicalAgentComponent)entityP.GetMovingAgentComponent()).SetGravity(false);
@@ -28,7 +27,6 @@ latent function Update2()
 				entityP.ChangeStance(NS_Swim);
 			}
 			else {
-				//entityP.EnablePhysicalMovement(false);
 				((CActor)entityP).SetIsSwimming(false);
 				((CMovingPhysicalAgentComponent)entityP.GetMovingAgentComponent()).SetGravity(true);
 				entityP.ChangeStance(NS_Normal);

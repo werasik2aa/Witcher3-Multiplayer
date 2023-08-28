@@ -3,11 +3,24 @@ exec function LaunchCustomFramework(templa:string) {
     var storage : Storage;
     var actors : array<CActor>;
     var actor : CActor;
+	var hud : CR4ScriptedHud;
     storage = getStorage();
     storage.clearPlayers();
     _SwitchCharacter(templa);
+	hud = (CR4ScriptedHud)theGame.GetHud();
+	if (hud) hud.OnSubtitleRemoved(2523);
     if(storage.DebugMode)
         Log("[WITCHER3MP] Player Data Cleared!");
+}
+exec function UpdateChat(inputs:string)
+{
+	var hud : CR4ScriptedHud;
+	hud = (CR4ScriptedHud)theGame.GetHud();
+	if ( hud )
+	{
+    	hud.OnSubtitleRemoved(2523);
+		hud.OnSubtitleAdded(2523, "", inputs, false);
+	}
 }
 exec function SetClientState(safa:int)
 {
