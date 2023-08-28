@@ -4,6 +4,6 @@ Run witcher3 game with key -net!
 
 Soon InGame Gui with dll c++
 
-#Sync Positions Horse, Player, 
-Should work battle sync very buggy!(NOT COMPLETED)
+
+Server console Password and Server Password not implemented!
 MyMod Dev-DS: https://discord.com/invite/yahCmFYjKe
