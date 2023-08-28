@@ -104,7 +104,7 @@ namespace Witcher3_Multiplayer.ClientHost.Data
                 }
                 else if (cmd.StartsWith("//Disconnect"))
                 {
-                    if (!IsConnected)
+                    if (IsConnected)
                     {
                         if (args.Length > 1)
                             return "[GameClient] Not Implemented";
@@ -125,16 +125,20 @@ namespace Witcher3_Multiplayer.ClientHost.Data
                     else return "[GameClient] Command Not Found";
                 }
             }
-            else
+            else if (cmd.StartsWith("/"))
             {
-                cmd = cmd.Substring(1);
-                if (args.Length > 1) {
+                if (args.Length > 1)
+                {
+                    cmd = args[0].Substring(1);
                     cmd += "(";
-                    foreach (var o in args) if(cmd != o) cmd += ", " + o;
+                    for (int o = 1; o < args.Length; o++) if (cmd != args[o]) cmd += args[o] + (args.Length > o + 1 ? ", " : "");
                     cmd += ")";
                 }
+                else cmd = cmd.Substring(1);
+                LOG("[Console] Executing: " + cmd);
                 return "[CONSOLE] " + GameManagerMY.ExecConsoleCommand(cmd).Replace("W3MP ", "");
             }
+            else return "[CONSOLE] Failed to send chat MSG! Connect to server first!";
         }
     }
 }

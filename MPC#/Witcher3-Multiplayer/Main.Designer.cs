@@ -41,6 +41,7 @@
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.GamePathTXT = new System.Windows.Forms.TextBox();
+            this.GamePathBTN = new HuaweiUnlocker.UI.NButton();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.CharacterSelectorTEXT = new System.Windows.Forms.ComboBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -71,9 +72,10 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ServerNAMETEXT = new System.Windows.Forms.TextBox();
             this.SaveServerData = new System.Windows.Forms.Timer(this.components);
-            this.GamePathBTN = new HuaweiUnlocker.UI.NButton();
             this.CmdBTN = new HuaweiUnlocker.UI.NButton();
             this.RunGame = new HuaweiUnlocker.UI.NButton();
+            this.HostBTN = new HuaweiUnlocker.UI.NButton();
+            this.ConBTN = new HuaweiUnlocker.UI.NButton();
             this.BURG.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsBTN)).BeginInit();
@@ -229,6 +231,33 @@
             this.GamePathTXT.Size = new System.Drawing.Size(896, 24);
             this.GamePathTXT.TabIndex = 1;
             this.GamePathTXT.Text = "Select your Path To Game";
+            // 
+            // GamePathBTN
+            // 
+            this.GamePathBTN.BackColor = System.Drawing.Color.DarkCyan;
+            this.GamePathBTN.BackColorAdditional = System.Drawing.Color.Gray;
+            this.GamePathBTN.BackColorGradientEnabled = false;
+            this.GamePathBTN.BackColorGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
+            this.GamePathBTN.BorderColor = System.Drawing.Color.Tomato;
+            this.GamePathBTN.BorderColorEnabled = false;
+            this.GamePathBTN.BorderColorOnHover = System.Drawing.Color.Tomato;
+            this.GamePathBTN.BorderColorOnHoverEnabled = false;
+            this.GamePathBTN.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.GamePathBTN.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.GamePathBTN.ForeColor = System.Drawing.Color.White;
+            this.GamePathBTN.Location = new System.Drawing.Point(911, 17);
+            this.GamePathBTN.Name = "GamePathBTN";
+            this.GamePathBTN.RippleColor = System.Drawing.Color.Black;
+            this.GamePathBTN.RoundingEnable = false;
+            this.GamePathBTN.Size = new System.Drawing.Size(100, 30);
+            this.GamePathBTN.TabIndex = 8;
+            this.GamePathBTN.Text = "Select path";
+            this.GamePathBTN.TextHover = null;
+            this.GamePathBTN.UseDownPressEffectOnClick = false;
+            this.GamePathBTN.UseRippleEffect = true;
+            this.GamePathBTN.UseVisualStyleBackColor = false;
+            this.GamePathBTN.UseZoomEffectOnHover = false;
+            this.GamePathBTN.Click += new System.EventHandler(this.GamePathBTN_Click);
             // 
             // groupBox12
             // 
@@ -541,33 +570,6 @@
             this.SaveServerData.Interval = 10000;
             this.SaveServerData.Tick += new System.EventHandler(this.SaveServerData_Tick);
             // 
-            // GamePathBTN
-            // 
-            this.GamePathBTN.BackColor = System.Drawing.Color.DarkCyan;
-            this.GamePathBTN.BackColorAdditional = System.Drawing.Color.Gray;
-            this.GamePathBTN.BackColorGradientEnabled = false;
-            this.GamePathBTN.BackColorGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
-            this.GamePathBTN.BorderColor = System.Drawing.Color.Tomato;
-            this.GamePathBTN.BorderColorEnabled = false;
-            this.GamePathBTN.BorderColorOnHover = System.Drawing.Color.Tomato;
-            this.GamePathBTN.BorderColorOnHoverEnabled = false;
-            this.GamePathBTN.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.GamePathBTN.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.GamePathBTN.ForeColor = System.Drawing.Color.White;
-            this.GamePathBTN.Location = new System.Drawing.Point(911, 17);
-            this.GamePathBTN.Name = "GamePathBTN";
-            this.GamePathBTN.RippleColor = System.Drawing.Color.Black;
-            this.GamePathBTN.RoundingEnable = false;
-            this.GamePathBTN.Size = new System.Drawing.Size(100, 30);
-            this.GamePathBTN.TabIndex = 8;
-            this.GamePathBTN.Text = "Select path";
-            this.GamePathBTN.TextHover = null;
-            this.GamePathBTN.UseDownPressEffectOnClick = false;
-            this.GamePathBTN.UseRippleEffect = true;
-            this.GamePathBTN.UseVisualStyleBackColor = false;
-            this.GamePathBTN.UseZoomEffectOnHover = false;
-            this.GamePathBTN.Click += new System.EventHandler(this.GamePathBTN_Click);
-            // 
             // CmdBTN
             // 
             this.CmdBTN.BackColor = System.Drawing.Color.DarkCyan;
@@ -581,11 +583,11 @@
             this.CmdBTN.Cursor = System.Windows.Forms.Cursors.Hand;
             this.CmdBTN.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.CmdBTN.ForeColor = System.Drawing.Color.White;
-            this.CmdBTN.Location = new System.Drawing.Point(79, 499);
+            this.CmdBTN.Location = new System.Drawing.Point(479, 499);
             this.CmdBTN.Name = "CmdBTN";
             this.CmdBTN.RippleColor = System.Drawing.Color.Black;
             this.CmdBTN.RoundingEnable = false;
-            this.CmdBTN.Size = new System.Drawing.Size(589, 38);
+            this.CmdBTN.Size = new System.Drawing.Size(189, 38);
             this.CmdBTN.TabIndex = 7;
             this.CmdBTN.Text = "Local Command";
             this.CmdBTN.TextHover = null;
@@ -622,6 +624,60 @@
             this.RunGame.UseZoomEffectOnHover = false;
             this.RunGame.Click += new System.EventHandler(this.RunGame_Click);
             // 
+            // HostBTN
+            // 
+            this.HostBTN.BackColor = System.Drawing.Color.DarkCyan;
+            this.HostBTN.BackColorAdditional = System.Drawing.Color.Gray;
+            this.HostBTN.BackColorGradientEnabled = false;
+            this.HostBTN.BackColorGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
+            this.HostBTN.BorderColor = System.Drawing.Color.Tomato;
+            this.HostBTN.BorderColorEnabled = false;
+            this.HostBTN.BorderColorOnHover = System.Drawing.Color.Tomato;
+            this.HostBTN.BorderColorOnHoverEnabled = false;
+            this.HostBTN.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.HostBTN.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.HostBTN.ForeColor = System.Drawing.Color.White;
+            this.HostBTN.Location = new System.Drawing.Point(78, 499);
+            this.HostBTN.Name = "HostBTN";
+            this.HostBTN.RippleColor = System.Drawing.Color.Black;
+            this.HostBTN.RoundingEnable = false;
+            this.HostBTN.Size = new System.Drawing.Size(194, 38);
+            this.HostBTN.TabIndex = 10;
+            this.HostBTN.Text = "Host Game";
+            this.HostBTN.TextHover = null;
+            this.HostBTN.UseDownPressEffectOnClick = false;
+            this.HostBTN.UseRippleEffect = true;
+            this.HostBTN.UseVisualStyleBackColor = false;
+            this.HostBTN.UseZoomEffectOnHover = false;
+            this.HostBTN.Click += new System.EventHandler(this.HostBTN_Click);
+            // 
+            // ConBTN
+            // 
+            this.ConBTN.BackColor = System.Drawing.Color.DarkCyan;
+            this.ConBTN.BackColorAdditional = System.Drawing.Color.Gray;
+            this.ConBTN.BackColorGradientEnabled = false;
+            this.ConBTN.BackColorGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
+            this.ConBTN.BorderColor = System.Drawing.Color.Tomato;
+            this.ConBTN.BorderColorEnabled = false;
+            this.ConBTN.BorderColorOnHover = System.Drawing.Color.Tomato;
+            this.ConBTN.BorderColorOnHoverEnabled = false;
+            this.ConBTN.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ConBTN.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ConBTN.ForeColor = System.Drawing.Color.White;
+            this.ConBTN.Location = new System.Drawing.Point(278, 499);
+            this.ConBTN.Name = "ConBTN";
+            this.ConBTN.RippleColor = System.Drawing.Color.Black;
+            this.ConBTN.RoundingEnable = false;
+            this.ConBTN.Size = new System.Drawing.Size(195, 38);
+            this.ConBTN.TabIndex = 11;
+            this.ConBTN.Text = "Connect to server";
+            this.ConBTN.TextHover = null;
+            this.ConBTN.UseDownPressEffectOnClick = false;
+            this.ConBTN.UseRippleEffect = true;
+            this.ConBTN.UseVisualStyleBackColor = false;
+            this.ConBTN.UseZoomEffectOnHover = false;
+            this.ConBTN.Click += new System.EventHandler(this.ConBTN_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -629,6 +685,8 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(36)))), ((int)(((byte)(40)))));
             this.ClientSize = new System.Drawing.Size(1117, 549);
+            this.Controls.Add(this.ConBTN);
+            this.Controls.Add(this.HostBTN);
             this.Controls.Add(this.SettingsLBOX);
             this.Controls.Add(this.CmdBTN);
             this.Controls.Add(this.CMDb);
@@ -721,6 +779,8 @@
         private HuaweiUnlocker.UI.NButton GamePathBTN;
         public System.Windows.Forms.TextBox GamePathTXT;
         private HuaweiUnlocker.UI.NButton CmdBTN;
+        private HuaweiUnlocker.UI.NButton HostBTN;
+        private HuaweiUnlocker.UI.NButton ConBTN;
     }
 }
 

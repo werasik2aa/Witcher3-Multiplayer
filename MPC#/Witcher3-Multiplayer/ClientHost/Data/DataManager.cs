@@ -141,8 +141,8 @@ namespace Witcher3_Multiplayer.ClientHost
                     GameManagerUI.BlockOrUnblockAllActions(ChatInputMode);
                     ChatTextInput += ctrl && keycode == Keys.V ? (string)Clipboard.GetDataObject().GetData(DataFormats.Text, true) : GetKey(keycode).ToString();
                 }
-                GameManagerUI.ChatUpdate(PrevChatText + NewLineGame + MyChatName + ChatTextInput);
                 GameManagerUI.BlockOrUnblockAllActions(ChatInputMode);
+                GameManagerUI.ChatUpdate(PrevChatText + NewLineGame + MyChatName + ChatTextInput);
             }
         }
         public static char GetKey(Keys key)

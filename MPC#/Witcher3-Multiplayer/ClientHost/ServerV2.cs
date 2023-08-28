@@ -44,7 +44,7 @@ namespace Witcher3_Multiplayer.ClientHost
                 ELOG("[client] NEED A PASSWORD! Because without password server easy to hack");
                 return;
             }
-            LOG("Creating Server");
+            LOG("[host] Creating Server...");
             MaxPlayers = MaxP;
             CommandShell = RCON;
             Password = password;
@@ -59,12 +59,12 @@ namespace Witcher3_Multiplayer.ClientHost
                 Version = VersionCur,
                 RequireCheckVersion = DataAPP.ServerCheckClientVersion
             };
-            LOG("Server Created!");
+            LOG("[host] Server Created!");
             while (true)
             {
                 if (!SocketV2.IsConneted() & !DataAPP.ServerDedicated)
                 {
-                    ELOG("Game closed or server closed");
+                    ELOG("[host] Game closed or server closed");
                     break;
                 }
                 var result = await UDP_SERVER.ReceiveAsync();

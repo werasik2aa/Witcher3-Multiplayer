@@ -42,7 +42,7 @@ namespace Witcher3_Multiplayer.ClientHost
                 ELOG("[client] NEED A PASSWORD! FOR REMOTE CONTROLL");
                 return;
             }
-            LOG("Connecting to " + address + ":" + port);
+            LOG("[client] Connecting to " + address + ":" + port);
             ConnectedEPOINT = new IPEndPoint(IPAddress.Parse(address), port);
             UDP_CLIENT = new UdpClient(address, port);
             RCON = RCON ? AccessShell(Password) : RCON;
@@ -61,7 +61,7 @@ namespace Witcher3_Multiplayer.ClientHost
                 {
                     UDP_CLIENT.Close();
                     IsConnected = false;
-                    LOG("Game Or Server Closed");
+                    LOG("[client] Game Or Server Closed");
                 }
             }
         }

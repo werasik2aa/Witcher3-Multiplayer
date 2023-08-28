@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Witcher3_Multiplayer.ClientHost;
+using Witcher3_Multiplayer.ClientHost.Data;
 using Witcher3_Multiplayer.Game;
 using Witcher3_Multiplayer.Overlay;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
@@ -56,16 +57,6 @@ namespace Witcher3_Multiplayer
                 JoinTestLocalClient = DebugTestClient.Checked
             };
             DataAPP.SeriliazeToFile("Data\\Settings.bin");
-        }
-        public Main()
-        {
-            InitializeComponent();
-            LOGGERB = LogBoxman;
-            MForm = this;
-            foreach (var a in NpcsPlayer)
-                CharacterSelectorTEXT.Items.Add(a);
-            CharacterSelectorTEXT.SelectedIndex = 1;
-            if (!Directory.Exists("Data") || !File.Exists("Data\\Settings.bin")) SaveData();
             DataAPP = FileToStructure<Settings>("Data\\Settings.bin");
             NickNameTEXT.Text = DataAPP.NickName;
             CharacterSelectorTEXT.Text = DataAPP.character;
@@ -80,6 +71,16 @@ namespace Witcher3_Multiplayer
             DebugTestClient.Checked = DataAPP.JoinTestLocalClient;
             ServerNAMETEXT.Text = DataAPP.ServerName;
             GamePathTXT.Text = DataAPP.GamePath;
+        }
+        public Main()
+        {
+            InitializeComponent();
+            LOGGERB = LogBoxman;
+            MForm = this;
+            foreach (var a in NpcsPlayer)
+                CharacterSelectorTEXT.Items.Add(a);
+            CharacterSelectorTEXT.SelectedIndex = 1;
+            if (!Directory.Exists("Data") || !File.Exists("Data\\Settings.bin")) SaveData();
         }
         private void RunGame_Click(object sender, EventArgs e)
         {
@@ -123,6 +124,7 @@ namespace Witcher3_Multiplayer
             }  
             if (!IsConnected)
             {
+                DataAPP.ClientPort = DataAPP.ServerPort;
                 SaveData();
                 var a = Task.Run(() =>
                 {
@@ -135,6 +137,7 @@ namespace Witcher3_Multiplayer
                                 ClientV2.Connect(DataAPP.NickName, DataAPP.character, DataAPP.ServerIP, DataAPP.ServerPort, DataAPP.ClientRCON);
                             });
                         }
+                        else LOG("[client] Failed to connect to game is it launched?");
                     }
                     else
                     {
@@ -165,8 +168,10 @@ namespace Witcher3_Multiplayer
                                 ServerV2.CreateServer(DataAPP.ServerPort, DataAPP.ServerIP, DataAPP.ServerMaxPlayers, DataAPP.ServerRCON, DataAPP.ServerConsolePassword);
                             });
                             Thread.Sleep(200);
-                            ClientV2.Connect(DataAPP.NickName, DataAPP.character, "127.0.0.1", DataAPP.ServerPort, DataAPP.ClientRCON);
-                        }
+                            if(!DataAPP.ServerDedicated)
+                                ClientV2.Connect(DataAPP.NickName, DataAPP.character, "127.0.0.1", DataAPP.ServerPort, DataAPP.ClientRCON);
+                        } else
+                            LOG("[client] Failed to Connect to game is it launched?");
                     }
                     else
                     {
@@ -175,7 +180,8 @@ namespace Witcher3_Multiplayer
                             ServerV2.CreateServer(DataAPP.ServerPort, DataAPP.ServerIP, DataAPP.ServerMaxPlayers, DataAPP.ServerRCON, DataAPP.ServerConsolePassword);
                         });
                         Thread.Sleep(200);
-                        ClientV2.Connect(DataAPP.NickName, DataAPP.character, "127.0.0.1", DataAPP.ServerPort, DataAPP.ClientRCON);
+                        if (!DataAPP.ServerDedicated)
+                            ClientV2.Connect(DataAPP.NickName, DataAPP.character, "127.0.0.1", DataAPP.ServerPort, DataAPP.ClientRCON);
                     }
                 });
             }
@@ -192,9 +198,9 @@ namespace Witcher3_Multiplayer
                     if (!SocketV2.IsConneted())
                     {
                         if (SocketV2.ConnectToGame())
-                            LOG("Exec: " + GameManagerMY.ExecConsoleCommand(CMDb.Text));
+                            LOG(ClientCommandHandler.CommandLST(ClientV2.UDP_CLIENT, CMDb.Text, CMDb.Text.GetArgs()));
                     } else
-                        LOG("Exec: " + GameManagerMY.ExecConsoleCommand(CMDb.Text));
+                        LOG(ClientCommandHandler.CommandLST(ClientV2.UDP_CLIENT, CMDb.Text, CMDb.Text.GetArgs()));
                 }
             });
         }
@@ -217,6 +223,16 @@ namespace Witcher3_Multiplayer
                 GamePathTXT.Text = tsplit[0];
                 for (int a = 1; a < tsplit.Length-3; a++) GamePathTXT.Text += "\\" + tsplit[a];
             }
+        }
+
+        private void ConBTN_Click(object sender, EventArgs e)
+        {
+            Connect_ActionTest();
+        }
+
+        private void HostBTN_Click(object sender, EventArgs e)
+        {
+            Host_ActionTest();
         }
     }
 }

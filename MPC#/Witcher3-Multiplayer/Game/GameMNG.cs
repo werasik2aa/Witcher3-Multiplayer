@@ -55,7 +55,6 @@ namespace Witcher3_Multiplayer.Game
     {
         public static string ExecConsoleCommand(string cmd)
         {
-            if (DataAPP.Debug) LOG("Executing: " + cmd);
             return SocketV2.ReadString(Convertors.Execute(cmd));
         }
         public static string SetCurrentPlayers(int icount)

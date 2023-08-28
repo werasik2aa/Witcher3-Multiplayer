@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Witcher3_Multiplayer.ClientHost;
 using Witcher3_Multiplayer.Game;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
 using static Witcher3_Multiplayer.langproc;
 namespace Witcher3_Multiplayer
