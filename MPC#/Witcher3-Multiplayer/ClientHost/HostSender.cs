@@ -20,6 +20,13 @@ namespace Witcher3_Multiplayer.ClientHost
                 if (EXCEPT != o.Key || DataAPP.JoinTestLocalClient)
                     SendDataHost(socks, o.Key, data);
         }
+        public static void SendDataToAllExceptOne(UdpClient socks, IPEndPoint EXCEPT, int sta, string info)
+        {
+            byte[] data = BitConverter.GetBytes(sta).Append(Encoding.UTF8.GetBytes(info));
+            foreach (var o in PlayerDataServer)
+                if (EXCEPT != o.Key || DataAPP.JoinTestLocalClient)
+                    SendDataHost(socks, o.Key, data);
+        }
         public static void SendDataToAllExceptOne(UdpClient socks, IPEndPoint EXCEPT, int sta)
         {
             byte[] data = BitConverter.GetBytes(sta);

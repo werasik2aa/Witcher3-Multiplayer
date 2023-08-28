@@ -74,6 +74,7 @@ namespace Witcher3_Multiplayer.Game
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
+                    MForm.Visible = true;
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
                 }
                 return null;

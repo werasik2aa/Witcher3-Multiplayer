@@ -218,16 +218,17 @@ namespace Witcher3_Multiplayer.ClientHost
         }
         public enum RecvSendTypes
         {
+            RT_OK,
             //RET-FROMHOST TYPES
             RET_PLAYERDATAS,
             RET_ACCESS,
             RET_CONNECTED,
             RET_SAVEFILE,
-
+            RET_RTOK,
             //SND-TOHOST TYPES
             SND_PLAYERINFO,
             SND_HOSTINFO,
-            SND_COMMAND,
+            SND_COMMANDORCHATMSG,
             SND_SAVEFILE,
             SND_DISCONNECTED,
             SND_PLAYERPOSITION,

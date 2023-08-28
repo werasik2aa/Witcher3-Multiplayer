@@ -1,7 +1,9 @@
 ﻿using HuaweiUnlocker.UI;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +18,14 @@ namespace Witcher3_Multiplayer
 {
     public partial class Main : Form
     {
+        private const UInt32 StdOutputHandle = 0xFFFFFFF5;
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetStdHandle(UInt32 nStdHandle);
+        [DllImport("kernel32.dll")]
+        private static extern void SetStdHandle(UInt32 nStdHandle, IntPtr handle);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
         private void OnApplicationExit(object sender, EventArgs e)
         {
             if (IsConnected)
@@ -73,22 +83,37 @@ namespace Witcher3_Multiplayer
         }
         private void RunGame_Click(object sender, EventArgs e)
         {
-            GameManagerMY.RunGame("G:\\The Witcher 3 Wild Hunt");
+            SaveData();
             LOG("Waiting For game Net Server");
-            int cur = 0;
-            while (!SocketV2.ConnectToGame())
+            var process = System.Diagnostics.Process.GetProcessesByName("witcher3").FirstOrDefault();
+            if (process == null)
             {
-                if (30 < cur++) {
-                    LOG("Game Failed to launch?");
-                    return;
+                GameManagerMY.RunGame(DataAPP.GamePath);
+                int cur = 30;
+                while (!SocketV2.ConnectToGame())
+                {
+                    if (cur-- > 0)
+                        Thread.Sleep(1000);
+                    else
+                        ELOG("Connect game time out");
                 }
-                Thread.Sleep(1000);
             }
-            if(SocketV2.IsConneted())
-                LOG("Connected");
+            else SocketV2.ConnectToGame();
+            if (SocketV2.IsConneted())
+                LOG("Connected To Game");
         }
-
-        private void Connect_Click(object sender, EventArgs e)
+        public static void CreateConsole()
+        {
+            AllocConsole();
+            IntPtr defaultStdout = new IntPtr(7);
+            IntPtr currentStdout = GetStdHandle(StdOutputHandle);
+            if (currentStdout != defaultStdout)
+                SetStdHandle(StdOutputHandle, defaultStdout);
+            TextWriter writer = new StreamWriter(Console.OpenStandardOutput())
+            { AutoFlush = true };
+            Console.SetOut(writer);
+        }
+        public void Connect_ActionTest()
         {
             if (IsHost)
             {
@@ -119,16 +144,13 @@ namespace Witcher3_Multiplayer
                         });
                     }
                 });
-                NButton aaf = (NButton)sender;
-                aaf.Text = "Disconnect";
             }
             else
                 ClientV2.Disconnect();
         }
 
-        private void HostBTN_Click(object sender, EventArgs e)
+        public void Host_ActionTest()
         {
-
             if (!IsHost)
             {
                 SaveData();
@@ -164,7 +186,7 @@ namespace Witcher3_Multiplayer
             var a = Task.Run(() =>
             {
                 if (IsConnected)
-                    ClientSender.SendData(ClientV2.UDP_CLIENT, (int)RecvSendTypes.SND_COMMAND, CMDb.Text);
+                    ClientSender.SendData(ClientV2.UDP_CLIENT, (int)RecvSendTypes.SND_COMMANDORCHATMSG, CMDb.Text);
                 else
                 {
                     if (!SocketV2.IsConneted())
@@ -185,6 +207,16 @@ namespace Witcher3_Multiplayer
         private void SaveServerData_Tick(object sender, EventArgs e)
         {
             ServerData.SeriliazeToFile("Data\\PlayerData");
+        }
+
+        private void GamePathBTN_Click(object sender, EventArgs e)
+        {
+            var fbd = new OpenFileDialog();
+            if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.FileName)) {
+                var tsplit = fbd.FileName.Split('\\');
+                GamePathTXT.Text = tsplit[0];
+                for (int a = 1; a < tsplit.Length-3; a++) GamePathTXT.Text += "\\" + tsplit[a];
+            }
         }
     }
 }

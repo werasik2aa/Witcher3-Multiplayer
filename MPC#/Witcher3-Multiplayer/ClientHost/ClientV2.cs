@@ -29,13 +29,12 @@ namespace Witcher3_Multiplayer.ClientHost
                 ELOG("[client] Please start game first!");
                 return;
             }
-            if (GameManagerUI.IsInMenu() & GameManagerUI.IsGameStopped() & GameManagerUI.IsGamePaused())
+            if (GameManagerUI.IsGameNotLaunched())
             {
                 ELOG("You can't connect while you in Main-menu! Please load save of game");
                 return;
             }
-            if (GameManagerUI.IsGameStopped() || GameManagerUI.IsGamePaused())
-                GameManagerUI.UnpauseGame();
+            if (GameManagerUI.IsPausedTWO()) GameManagerUI.UnpauseGame(); //TRY TO UNPAUSE GAME
             if (IsHost)
                 LOG("[client] You Hoster of The Game!");
             if (RCON && string.IsNullOrEmpty(Password))
@@ -148,7 +147,9 @@ namespace Witcher3_Multiplayer.ClientHost
                         LOG("[Server] " + Encoding.ASCII.GetString(recvdata));
                         break;
                     case RecvSendTypes.RCV_CHATRESPONSE:
-                        LOG(PlayerDataClient[IDClient].NickName + ": " + Encoding.UTF8.GetString(recvdata));
+                        LOG(PlayerDataClient[IDClient].NickName + "> " + Encoding.UTF8.GetString(recvdata));
+                        PrevChatText += NewLineGame + "[" + PlayerDataClient[IDClient].NickName + "] " + Encoding.UTF8.GetString(recvdata);
+                        GameManagerUI.ChatUpdate(PrevChatText);
                         break;
                     case RecvSendTypes.RCV_DISCONNECTED:
                         LOG("[host] ===Disconnected===");

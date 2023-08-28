@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Witcher3_Multiplayer.ClientHost.Data;
 using Witcher3_Multiplayer.Game;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
 using static Witcher3_Multiplayer.langproc;
@@ -33,7 +34,7 @@ namespace Witcher3_Multiplayer.ClientHost
                 LOG("[host] Please Disconnect from server, before create new server. OR MANY BUGS!");
                 return;
             }
-            if (!DataAPP.ServerDedicated & GameManagerUI.IsInMenu() & GameManagerUI.IsGameStopped() & GameManagerUI.IsGamePaused())
+            if (!DataAPP.ServerDedicated & GameManagerUI.IsGameNotLaunched())
             {
                 ELOG("YOU_CAN'T HOST GAME IN MAIN MENU! PLEASE load a save");
                 return;
@@ -104,49 +105,19 @@ namespace Witcher3_Multiplayer.ClientHost
                         }
                         HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_PLAYERINFO, iiii.ToByteArray());
                         break;
-                    case RecvSendTypes.SND_COMMAND:
+                    case RecvSendTypes.SND_COMMANDORCHATMSG:
                         var cmd = Encoding.UTF8.GetString(recvdata);
-                        var args = cmd.Contains(' ') ? cmd.Split(' ') : new string[0];
+                        var args = cmd.GetArgs();
                         var SCL = ServerData.Find(x => x.ClientID == IDClient);
-                        if (DataAPP.Debug)
-                            LOG("[host] Receive Message: " + cmd);
-                        if ((SCL.ISAdmin || SCL.ISConsole) && cmd.StartsWith("/"))
-                        {
-                            if (cmd.StartsWith("//"))
-                            {
-                                LOG("Player: " + PlayerDataServer[fromclie].NickName + " Ussed Server Command: " + cmd.Substring(2));
-                                try
-                                {
-                                    if (cmd.StartsWith("///SetAdmin"))
-                                    {
-                                        SCL.ISAdmin = (args.Length > 0 ? bool.Parse(args[1]) : SCL.ISAdmin);
-                                    }
-                                    else if (cmd.StartsWith("///Kick"))
-                                    {
-
-                                    }
-                                    else if (cmd.StartsWith("///Ban"))
-                                    {
-
-                                    }
-                                    else if (cmd.StartsWith("///TeleportTo"))
-                                    {
-
-                                    }
-                                }
-                                catch
-                                {
-                                    HostSender.SendDataHost(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_COMMANDRESPONSE, "Wrong Usage Command");
-                                }
-                            }
-                            else
-                            {
-                                LOG("Player: " + PlayerDataServer[fromclie].NickName + " Ussed Game Command: " + cmd.Substring(1));
-                                HostSender.SendDataHost(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_COMMANDRESPONSE, GameManagerMY.ExecConsoleCommand(cmd.Substring(1)));
-                            }
-                        }
+                        if (DataAPP.Debug) LOG("[host] Receive Message: " + cmd);
+                        if (cmd.StartsWith("//"))
+                           HostSender.SendDataHost(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_COMMANDRESPONSE, 
+                               ServerCommandHandler.CommandLST(UDP_SERVER, 
+                               fromclie, 
+                               SCL.ISAdmin || SCL.ISConsole,
+                               args.Length > 0 ? args[0] : cmd, args));
                         else
-                            HostSender.SendDataHost(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_CHATRESPONSE, cmd);
+                            HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_CHATRESPONSE, cmd);
                         break;
                     case RecvSendTypes.RET_CONNECTED:
                         LOG("[host] New Client wants to connect");

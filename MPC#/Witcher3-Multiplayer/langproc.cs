@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -32,12 +33,15 @@ namespace Witcher3_Multiplayer
             public bool JoinTestLocalClient;
         }
         public static TextBox LOGGERB;
-        public static bool IsHost = false, IsConnected = false, AllowLocalDisc = false;
+        public static bool IsHost = false, IsConnected = false, AllowLocalDisc = false, ChatInputMode = false;
         public static double VersionCur = 1.0;
         public static int SendDataDelayC_S_C = 64;
         public static int CheckAndSendDataDelayCMISC_S_CALL = 64;
         public static Main MForm;
-        public static string ChatInp = "";
+        public static string ChatTextInput = "";
+        public static string PrevChatText = " ";
+        public static string MyChatName = "";
+        public static string NewLineGame = "&#10;";
         public static string MonstersPath = "characters\\npc_entities\\monsters\\";//+MONSTERNAME
 
         public static List<PlayerServer> ServerData = new List<PlayerServer>();//sender
@@ -49,9 +53,10 @@ namespace Witcher3_Multiplayer
         public static List<ChestData> ChestDatasClient = new List<ChestData>(); // CHEST ITEMS
         public static void LOG(string s)
         {
+            Console.WriteLine("[INFO] " + s + Environment.NewLine);
             Action t = () =>
             {
-                LOGGERB.Text += ("[INFO] " + s + Environment.NewLine);
+                LOGGERB.Text += "[INFO] " + s + Environment.NewLine;
                 LOGGERB.SelectionStart = LOGGERB.Text.Length;
                 LOGGERB.ScrollToCaret();
             };
@@ -62,7 +67,25 @@ namespace Witcher3_Multiplayer
         }
         public static void ELOG(string s)
         {
-            Action t = () => { LOGGERB.Text += "[ERROR] " + s + Environment.NewLine; };
+            Console.WriteLine("[ERROR] " + s + Environment.NewLine);
+            Action t = () => {
+                LOGGERB.Text += "[ERROR] " + s + Environment.NewLine;
+                LOGGERB.SelectionStart = LOGGERB.Text.Length;
+                LOGGERB.ScrollToCaret();
+            };
+            if (LOGGERB.InvokeRequired)
+                LOGGERB.Invoke(t);
+            else
+                t();
+        }
+        public static void WLOG(string s)
+        {
+            Console.WriteLine("[WARN] " + s + Environment.NewLine);
+            Action t = () => {
+                LOGGERB.Text += "[WARN] " + s + Environment.NewLine;
+                LOGGERB.SelectionStart = LOGGERB.Text.Length;
+                LOGGERB.ScrollToCaret();
+            };
             if (LOGGERB.InvokeRequired)
                 LOGGERB.Invoke(t);
             else
@@ -98,6 +121,10 @@ namespace Witcher3_Multiplayer
             memStream.Seek(0, SeekOrigin.Begin);
             T obj = (T)binForm.Deserialize(memStream);
             return obj;
+        }
+        public static string[] GetArgs(this string cmd)
+        {
+            return cmd.Contains(" ") ? cmd.Split(' ') : new string[0];
         }
     }
 }

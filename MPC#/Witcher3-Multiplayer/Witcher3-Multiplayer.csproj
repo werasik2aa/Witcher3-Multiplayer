@@ -37,6 +37,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -56,8 +57,10 @@
   <ItemGroup>
     <Compile Include="ClientHost\ClientSender.cs" />
     <Compile Include="ClientHost\ClientV2.cs" />
+    <Compile Include="ClientHost\Data\ClientCommandHandler.cs" />
     <Compile Include="ClientHost\Data\DataManager.cs" />
     <Compile Include="ClientHost\Data\DataTypes.cs" />
+    <Compile Include="ClientHost\Data\ServerCommandHandler.cs" />
     <Compile Include="ClientHost\HostSender.cs" />
     <Compile Include="ClientHost\ServerV2.cs" />
     <Compile Include="Game\Convertors.cs" />

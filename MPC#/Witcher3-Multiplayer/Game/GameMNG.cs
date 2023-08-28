@@ -1,4 +1,5 @@
-﻿using Witcher3_Multiplayer.ClientHost;
+﻿using System.IO;
+using Witcher3_Multiplayer.ClientHost;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
 using static Witcher3_Multiplayer.langproc;
 namespace Witcher3_Multiplayer.Game
@@ -32,6 +33,22 @@ namespace Witcher3_Multiplayer.Game
         public static string InitGame(string template)
         {
             return SocketV2.ReadString(Convertors.Execute("LaunchCustomFramework(\"" + template + "\")"));
+        }
+        public static string ChatUpdate(string chatinput)
+        {
+            return SocketV2.ReadString(Convertors.Execute("UpdateChat(\"" + chatinput + "\")"));
+        }
+        public static string BlockOrUnblockAllActions(bool state)
+        {
+            return SocketV2.ReadString(Convertors.Execute("BlockAllActions(" + state.ToString().ToLower() + ")"));
+        }
+        public static bool IsGameNotLaunched()
+        {
+            return IsInMenu() & IsGameStopped() & IsGamePaused();
+        }
+        public static bool IsPausedTWO()
+        {
+            return IsGameStopped() || IsGamePaused();
         }
     }
     public static class GameManagerMY
@@ -169,15 +186,20 @@ namespace Witcher3_Multiplayer.Game
                     return SocketV2.ReadString(Convertors.Execute("stoprain"));
             }
         }
-        public static void RunGame(string path)
+        public static bool RunGame(string path)
         {
             path += "\\bin\\x64";
-            LOG("STARTING: " + path + "\\witcher3.exe");
-            System.Diagnostics.Process p = new System.Diagnostics.Process();
-            p.StartInfo.WorkingDirectory = path;
-            p.StartInfo.FileName = "witcher3.exe";
-            p.StartInfo.Arguments = "-net -debugscripts";
-            p.Start();
+            if (File.Exists(path + "\\witcher3.exe"))
+            {
+                LOG("STARTING: " + path + "\\witcher3.exe");
+                System.Diagnostics.Process p = new System.Diagnostics.Process();
+                p.StartInfo.WorkingDirectory = path;
+                p.StartInfo.FileName = "witcher3.exe";
+                p.StartInfo.Arguments = "-net";
+                p.Start();
+                return true;
+            }
+            return false;
         }
     }
 }

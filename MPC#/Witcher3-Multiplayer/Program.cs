@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Witcher3_Multiplayer.ClientHost;
+using Witcher3_Multiplayer.Game;
 using static Witcher3_Multiplayer.ClientHost.DataTypes;
 using static Witcher3_Multiplayer.langproc;
 namespace Witcher3_Multiplayer
@@ -47,11 +48,7 @@ namespace Witcher3_Multiplayer
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
-            {
-                Keys key = (Keys)Marshal.ReadInt32(lParam);
-               
-                
-            }
+                DataManager.KeyHandle((Keys)Marshal.ReadInt32(lParam));
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
     }
