@@ -62,35 +62,45 @@ exec function GetRewardQuest(qestname:string)
 }
 exec function BlockAllActions(block:bool)
 {
-  if (block)
-	{
-    thePlayer.BlockAction(EIAB_OpenPreparation, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_OpenMap, 'being_replacer');
-	  thePlayer.BlockAction(EIAB_OpenInventory, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_OpenJournal, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_OpenCharacterPanel, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_OpenGlossary, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_OpenAlchemy, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_OpenMeditation, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_MeditationWaiting, 'tutorial_inventory');
-	  thePlayer.BlockAction(EIAB_DismountVehicle, 'tutorial_inventory');
-    thePlayer.BlockAction(EIAB_OpenFastMenu, 'tutorial_inventory');
-    thePlayer.BlockAction(EIAB_FastTravel, 'tutorial_inventory');
+	var guiManager : CR4GuiManager;
+  	if (block){
+    	thePlayer.BlockAction(EIAB_OpenPreparation, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_OpenMap, 'being_replacer');
+	  	thePlayer.BlockAction(EIAB_OpenInventory, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_OpenJournal, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_OpenCharacterPanel, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_OpenGlossary, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_OpenAlchemy, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_OpenMeditation, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_MeditationWaiting, 'tutorial_inventory');
+	  	thePlayer.BlockAction(EIAB_DismountVehicle, 'tutorial_inventory');
+    	thePlayer.BlockAction(EIAB_OpenFastMenu, 'tutorial_inventory');
+    	thePlayer.BlockAction(EIAB_FastTravel, 'tutorial_inventory');
+		guiManager = theGame.GetGuiManager();
+		if (guiManager && guiManager.IsAnyMenu()) guiManager.GetRootMenu().CloseMenu();
 	}
 	else
 	{
 		thePlayer.UnblockAction(EIAB_OpenPreparation, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_OpenMap, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_OpenInventory, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_OpenJournal, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_OpenCharacterPanel, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_OpenGlossary, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_OpenAlchemy, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_OpenMeditation, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_MeditationWaiting, 'tutorial_inventory');
-	  thePlayer.UnblockAction(EIAB_DismountVehicle, 'tutorial_inventory');
-    thePlayer.UnblockAction(EIAB_OpenGwint, 'tutorial_inventory');
-    thePlayer.UnblockAction(EIAB_OpenFastMenu, 'tutorial_inventory');
-    thePlayer.UnblockAction(EIAB_FastTravel, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_OpenMap, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_OpenInventory, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_OpenJournal, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_OpenCharacterPanel, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_OpenGlossary, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_OpenAlchemy, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_OpenMeditation, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_MeditationWaiting, 'tutorial_inventory');
+	  	thePlayer.UnblockAction(EIAB_DismountVehicle, 'tutorial_inventory');
+    	thePlayer.UnblockAction(EIAB_OpenGwint, 'tutorial_inventory');
+    	thePlayer.UnblockAction(EIAB_OpenFastMenu, 'tutorial_inventory');
+    	thePlayer.UnblockAction(EIAB_FastTravel, 'tutorial_inventory');
 	}
+}
+exec function ResurrectMe()
+{
+	thePlayer.CheatResurrect();
+}
+exec function Test_Custom_DeathMenu()
+{
+	theGame.RequestMenu('DeathScreenMenu');
 }

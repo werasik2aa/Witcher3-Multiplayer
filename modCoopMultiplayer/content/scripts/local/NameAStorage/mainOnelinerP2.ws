@@ -28,7 +28,7 @@ state Render in Manager {
 				sprite = parent.module_flash.GetChildFlashSprite("mcOneliner" + oneliner.id);
 				if (!oneliner.getVisible(player_position)) {
 					sprite.SetVisible(false);
-					continue;	
+					continue;
 				}
 				if (oneliner.getScreenPosition(parent.module_hud, screen_position)) {
 					sprite.SetPosition(screen_position.X, screen_position.Y);

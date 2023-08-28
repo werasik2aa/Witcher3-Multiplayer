@@ -38,6 +38,15 @@ exec function SetPlayerCurrentHP(clid:int, health:int)
     if(entity.IsAlive() && health <= 0) entity.SetAlive(false);
     if(!entity.IsAlive() && health > 0) entity.SetAlive(true);
 }
+exec function SetAlivePOBJ(clid:int)
+{
+    var data : Storage;
+    var entity : CNewNPC;
+    data = getStorage();
+    entity = data.getPlayerOBJ(clid);
+    if(entity.IsAlive() && (int)entity.GetCurrentHealth() <= 0) entity.SetAlive(false);
+    if(!entity.IsAlive() && (int)entity.GetCurrentHealth() > 0) entity.SetAlive(true);
+}
 exec function SetPlayerCurrentLevel(clid:int, LVL:int)
 {
     var data : Storage;

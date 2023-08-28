@@ -1,4 +1,4 @@
-exec function FillChestWithItem(tag : name, nameit:name)
+exec function FillChestWithItem(tag : name, nameit:name) //?? HOW TO GET HORSE INVENTORY
 {
 	var container : W3Container;
 	var data : Storage;
@@ -8,7 +8,7 @@ exec function FillChestWithItem(tag : name, nameit:name)
 	if (data.DebugMode)
 		Log("[WITCHER3MP] Added Item: " + nameit + " To chest: " + container);
 }
-exec function GetChestItems()
+exec function GetChestItems() //The Horse items
 {
 	
 }

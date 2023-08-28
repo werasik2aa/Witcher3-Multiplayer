@@ -33,9 +33,9 @@ latent function Update2()
 				entityP.SetBehaviorVariable('shallowWater', 0.0);
 			}
 			//2.SETPPOS | 3.SetHorsePos
-       	    _MoveEntity(entityP, positionP, -10, 1, 20);
-       	    _MoveEntity(horseEntity, positionPH, -10, 2, 20);
+       	    _MoveEntity(entityP, positionP, -5000, 1, 20);
+       	    _MoveEntity(horseEntity, positionPH, -5000, 2, 20);
        	} else //3.SetHorsePos
-       	    _MoveEntity(horseEntity, positionPH, -10, 2, 20);//3.
+       	    _MoveEntity(horseEntity, positionPH, -5000, 2, 20);//3.
     }
 }
