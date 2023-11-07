@@ -3,7 +3,9 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using Witcher3_Multiplayer.ClientHost;
+using static Witcher3_Multiplayer.Game.Response;
 using static Witcher3_Multiplayer.langproc;
 namespace Witcher3_Multiplayer.Game
 {
@@ -52,14 +54,17 @@ namespace Witcher3_Multiplayer.Game
                 Response = new Response.Data(datare);
                 raw = Response.Params.Last().ToString().Replace("\\n", Environment.NewLine).Replace('@', '"').Replace("\\", "\\\\");
                 return raw;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
                     return "FAILDISCONNECT";
-                } return e.Message;
+                }
+                else ReadString(data);
+                return e.Message;
             }
         }
         public static JObject ReadJson(byte[] data, string tag)
@@ -71,12 +76,14 @@ namespace Witcher3_Multiplayer.Game
             }
             catch
             {
+                if (DataAPP.Debug) LOG("[Game-Socket] CATCH-JSONDATA_READ: " + raw + " RET_LEN: " + data.Length);
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
                     MForm.Visible = true;
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
                 }
+                else ReadJson(data, tag);
                 return null;
             }
         }
@@ -99,12 +106,13 @@ namespace Witcher3_Multiplayer.Game
             }
             catch
             {
+                if (DataAPP.Debug) LOG("[Game-Socket] CATCH-VECTOR3_READ: " + raw + " RET_LEN: " + data.Length);
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
                 }
-                if (DataAPP.Debug) LOG("CATCH-VECTOR3_READ: " + raw);
+                else ReadVector3(data);
                 return new Vector3(0, 0, 0);
             }
         }
@@ -127,12 +135,12 @@ namespace Witcher3_Multiplayer.Game
             }
             catch
             {
+                if (DataAPP.Debug) LOG("[Game-Socket] CATCH-QUATERNION_READ: " + raw + " RET_LEN: " + data.Length);
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
-                }
-                if (DataAPP.Debug) LOG("CATCH-VECTOR3_READ: " + raw);
+                } else ReadQuaternion(data);
                 return new Quaternion(0, 0, 0);
             }
         }
@@ -140,6 +148,7 @@ namespace Witcher3_Multiplayer.Game
         {
             try
             {
+                TCP_GAME.GetStream().FlushAsync();
                 byte[] datare = new byte[8192 * 32];
                 WriteData(data);
                 TCP_GAME.GetStream().Read(datare, 0, datare.Length);
@@ -149,12 +158,13 @@ namespace Witcher3_Multiplayer.Game
             }
             catch
             {
+                if (DataAPP.Debug) LOG("[Game-Socket] CATCH-INT_READ: " + raw + " RET_LEN: " + data.Length);
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
                 }
-                if (DataAPP.Debug) LOG("CATCH-INT_READ: " + raw);
+                else ReadInt(data);
                 return -1;
             }
         }
@@ -171,12 +181,13 @@ namespace Witcher3_Multiplayer.Game
             }
             catch
             {
+                if (DataAPP.Debug) LOG("[Game-Socket] CATCH-FLOAT_READ: " + raw + " RET_LEN: " + data.Length);
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
                 }
-                if (DataAPP.Debug) LOG("CATCH-INT_READ: " + raw);
+                else ReadFloat(data);
                 return -1;
             }
         }
@@ -193,12 +204,13 @@ namespace Witcher3_Multiplayer.Game
             }
             catch
             {
+                if (DataAPP.Debug) LOG("[Game-Socket] CATCH-BOOL_READ: " + raw + " RET_LEN: " + data.Length);
                 if (!TCP_GAME.Connected && IsConnected)
                 {
                     Disconnect();
                     ELOG("Game Crash? Or game DataAPP.Debug broken!");
                 }
-                if (DataAPP.Debug) LOG("CATCH-BOOL_READ: " + raw);
+                else ReadBool(data);
                 return false;
             }
         }

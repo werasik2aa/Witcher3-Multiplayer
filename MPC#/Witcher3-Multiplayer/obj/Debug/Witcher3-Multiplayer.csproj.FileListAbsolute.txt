@@ -1,0 +1,8 @@
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\bin\Debug\Witcher3-Multiplayer.exe.config
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\obj\Debug\Witcher3-Multiplayer.csproj.AssemblyReference.cache
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\obj\Debug\Witcher3_Multiplayer.Main.resources
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\obj\Debug\Witcher3_Multiplayer.Properties.Resources.resources
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\obj\Debug\Witcher3-Multiplayer.csproj.GenerateResource.cache
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\obj\Debug\Witcher3-Multiplayer.csproj.CoreCompileInputs.cache
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\obj\Debug\Witcher3-Multiplayer.exe
+D:\dev\Witcher3-Multiplayer\Witcher3-Multiplayer\obj\Debug\Witcher3-Multiplayer.pdb

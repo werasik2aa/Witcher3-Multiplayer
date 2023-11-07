@@ -41,10 +41,10 @@ namespace Witcher3_Multiplayer
         public static string ChatTextInput = "";
         public static string PrevChatText = " ";
         public static string MyChatName = "";
-        public static string NewLineGame = "&#10;";
+        public static string NewLineGame = "&#10;"; //NEW LINE FOR GAME
         public static string MonstersPath = "characters\\npc_entities\\monsters\\";//+MONSTERNAME
 
-        public static List<PlayerServer> ServerData = new List<PlayerServer>();//sender
+        public static Dictionary<int, PlayerServer> ServerData = new Dictionary<int, PlayerServer>();//Server Data (perms, chests)
         public static Dictionary<IPEndPoint, PlayerData> PlayerDataServer = new Dictionary<IPEndPoint, PlayerData>();//PDATA ON SERVER
         public static List<ChestData> ChestDatasServer = new List<ChestData>(); //CHEST ITEMS TO RESEND
 
@@ -103,8 +103,7 @@ namespace Witcher3_Multiplayer
             MemoryStream memStream = new MemoryStream(arrBytes);
             BinaryFormatter binForm = new BinaryFormatter();
             memStream.Seek(0, SeekOrigin.Begin);
-            T obj = (T)binForm.Deserialize(memStream);
-            return obj;
+            return (T)binForm.Deserialize(memStream);
         }
         public static void SeriliazeToFile(this object structure, string path)
         {
@@ -119,8 +118,14 @@ namespace Witcher3_Multiplayer
             MemoryStream memStream = new MemoryStream(File.ReadAllBytes(path));
             BinaryFormatter binForm = new BinaryFormatter();
             memStream.Seek(0, SeekOrigin.Begin);
-            T obj = (T)binForm.Deserialize(memStream);
-            return obj;
+            return (T)binForm.Deserialize(memStream);
+        }
+        public static object FileToObject(string path)
+        {
+            MemoryStream memStream = new MemoryStream(File.ReadAllBytes(path));
+            BinaryFormatter binForm = new BinaryFormatter();
+            memStream.Seek(0, SeekOrigin.Begin);
+            return binForm.Deserialize(memStream);
         }
         public static string[] GetArgs(this string cmd)
         {

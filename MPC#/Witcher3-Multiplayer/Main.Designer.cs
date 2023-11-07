@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.BURG = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -37,7 +36,7 @@
             this.LogBoxman = new System.Windows.Forms.TextBox();
             this.CMDb = new System.Windows.Forms.TextBox();
             this.SettingsLBOX = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ClientPAGE = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.GamePathTXT = new System.Windows.Forms.TextBox();
@@ -53,7 +52,7 @@
             this.ServerIPCONTEXT = new System.Windows.Forms.TextBox();
             this.NickTAG = new System.Windows.Forms.GroupBox();
             this.NickNameTEXT = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.HostPAGE = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.CheckClientSTATEFlag = new System.Windows.Forms.CheckBox();
             this.DebugTestClient = new System.Windows.Forms.CheckBox();
@@ -71,17 +70,25 @@
             this.SyncChestCONTFlag = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ServerNAMETEXT = new System.Windows.Forms.TextBox();
-            this.SaveServerData = new System.Windows.Forms.Timer(this.components);
             this.CmdBTN = new HuaweiUnlocker.UI.NButton();
             this.RunGame = new HuaweiUnlocker.UI.NButton();
             this.HostBTN = new HuaweiUnlocker.UI.NButton();
             this.ConBTN = new HuaweiUnlocker.UI.NButton();
+            this.DebugPAGE = new System.Windows.Forms.TabPage();
+            this.TestName = new System.Windows.Forms.TextBox();
+            this.SpwnObjBTN = new HuaweiUnlocker.UI.NButton();
+            this.mv_X = new System.Windows.Forms.TextBox();
+            this.SetMoveTO = new HuaweiUnlocker.UI.NButton();
+            this.mv_Y = new System.Windows.Forms.TextBox();
+            this.mv_Z = new System.Windows.Forms.TextBox();
+            this.SetMoveTOH = new HuaweiUnlocker.UI.NButton();
+            this.PlayerIDText = new System.Windows.Forms.TextBox();
             this.BURG.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingsBTN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SettingsLBOX.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.ClientPAGE.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox12.SuspendLayout();
@@ -89,13 +96,14 @@
             this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.NickTAG.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.HostPAGE.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.DebugPAGE.SuspendLayout();
             this.SuspendLayout();
             // 
             // BURG
@@ -172,8 +180,9 @@
             // 
             // SettingsLBOX
             // 
-            this.SettingsLBOX.Controls.Add(this.tabPage1);
-            this.SettingsLBOX.Controls.Add(this.tabPage2);
+            this.SettingsLBOX.Controls.Add(this.ClientPAGE);
+            this.SettingsLBOX.Controls.Add(this.HostPAGE);
+            this.SettingsLBOX.Controls.Add(this.DebugPAGE);
             this.SettingsLBOX.Location = new System.Drawing.Point(79, 12);
             this.SettingsLBOX.Name = "SettingsLBOX";
             this.SettingsLBOX.SelectedIndex = 0;
@@ -181,16 +190,16 @@
             this.SettingsLBOX.TabIndex = 9;
             this.SettingsLBOX.Visible = false;
             // 
-            // tabPage1
+            // ClientPAGE
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(36)))), ((int)(((byte)(40)))));
-            this.tabPage1.Controls.Add(this.groupBox8);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1026, 423);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Client";
+            this.ClientPAGE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(36)))), ((int)(((byte)(40)))));
+            this.ClientPAGE.Controls.Add(this.groupBox8);
+            this.ClientPAGE.Location = new System.Drawing.Point(4, 22);
+            this.ClientPAGE.Name = "ClientPAGE";
+            this.ClientPAGE.Padding = new System.Windows.Forms.Padding(3);
+            this.ClientPAGE.Size = new System.Drawing.Size(1026, 423);
+            this.ClientPAGE.TabIndex = 0;
+            this.ClientPAGE.Text = "Client";
             // 
             // groupBox8
             // 
@@ -372,17 +381,17 @@
             this.NickNameTEXT.TabIndex = 0;
             this.NickNameTEXT.Text = "Werasik2aa";
             // 
-            // tabPage2
+            // HostPAGE
             // 
-            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(36)))), ((int)(((byte)(40)))));
-            this.tabPage2.Controls.Add(this.groupBox4);
-            this.tabPage2.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1026, 423);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Server";
+            this.HostPAGE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(36)))), ((int)(((byte)(40)))));
+            this.HostPAGE.Controls.Add(this.groupBox4);
+            this.HostPAGE.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.HostPAGE.Location = new System.Drawing.Point(4, 22);
+            this.HostPAGE.Name = "HostPAGE";
+            this.HostPAGE.Padding = new System.Windows.Forms.Padding(3);
+            this.HostPAGE.Size = new System.Drawing.Size(1026, 423);
+            this.HostPAGE.TabIndex = 1;
+            this.HostPAGE.Text = "Server";
             // 
             // groupBox4
             // 
@@ -565,11 +574,6 @@
             this.ServerNAMETEXT.TabIndex = 0;
             this.ServerNAMETEXT.Text = "HUETOYA";
             // 
-            // SaveServerData
-            // 
-            this.SaveServerData.Interval = 10000;
-            this.SaveServerData.Tick += new System.EventHandler(this.SaveServerData_Tick);
-            // 
             // CmdBTN
             // 
             this.CmdBTN.BackColor = System.Drawing.Color.DarkCyan;
@@ -678,6 +682,139 @@
             this.ConBTN.UseZoomEffectOnHover = false;
             this.ConBTN.Click += new System.EventHandler(this.ConBTN_Click);
             // 
+            // DebugPAGE
+            // 
+            this.DebugPAGE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(36)))), ((int)(((byte)(40)))));
+            this.DebugPAGE.Controls.Add(this.PlayerIDText);
+            this.DebugPAGE.Controls.Add(this.SetMoveTOH);
+            this.DebugPAGE.Controls.Add(this.mv_Z);
+            this.DebugPAGE.Controls.Add(this.mv_Y);
+            this.DebugPAGE.Controls.Add(this.SetMoveTO);
+            this.DebugPAGE.Controls.Add(this.mv_X);
+            this.DebugPAGE.Controls.Add(this.SpwnObjBTN);
+            this.DebugPAGE.Controls.Add(this.TestName);
+            this.DebugPAGE.Location = new System.Drawing.Point(4, 22);
+            this.DebugPAGE.Name = "DebugPAGE";
+            this.DebugPAGE.Size = new System.Drawing.Size(1026, 423);
+            this.DebugPAGE.TabIndex = 2;
+            this.DebugPAGE.Text = "Debug";
+            // 
+            // TestName
+            // 
+            this.TestName.Location = new System.Drawing.Point(3, 30);
+            this.TestName.Name = "TestName";
+            this.TestName.Size = new System.Drawing.Size(133, 20);
+            this.TestName.TabIndex = 9;
+            // 
+            // SpwnObjBTN
+            // 
+            this.SpwnObjBTN.BackColor = System.Drawing.Color.DarkCyan;
+            this.SpwnObjBTN.BackColorAdditional = System.Drawing.Color.Gray;
+            this.SpwnObjBTN.BackColorGradientEnabled = false;
+            this.SpwnObjBTN.BackColorGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
+            this.SpwnObjBTN.BorderColor = System.Drawing.Color.Tomato;
+            this.SpwnObjBTN.BorderColorEnabled = false;
+            this.SpwnObjBTN.BorderColorOnHover = System.Drawing.Color.Tomato;
+            this.SpwnObjBTN.BorderColorOnHoverEnabled = false;
+            this.SpwnObjBTN.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.SpwnObjBTN.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SpwnObjBTN.ForeColor = System.Drawing.Color.White;
+            this.SpwnObjBTN.Location = new System.Drawing.Point(3, 56);
+            this.SpwnObjBTN.Name = "SpwnObjBTN";
+            this.SpwnObjBTN.RippleColor = System.Drawing.Color.Black;
+            this.SpwnObjBTN.RoundingEnable = false;
+            this.SpwnObjBTN.Size = new System.Drawing.Size(133, 22);
+            this.SpwnObjBTN.TabIndex = 12;
+            this.SpwnObjBTN.Text = "Spawn OBJ";
+            this.SpwnObjBTN.TextHover = null;
+            this.SpwnObjBTN.UseDownPressEffectOnClick = false;
+            this.SpwnObjBTN.UseRippleEffect = true;
+            this.SpwnObjBTN.UseVisualStyleBackColor = false;
+            this.SpwnObjBTN.UseZoomEffectOnHover = false;
+            this.SpwnObjBTN.Click += new System.EventHandler(this.SpwnObjBTN_Click);
+            // 
+            // mv_X
+            // 
+            this.mv_X.Location = new System.Drawing.Point(142, 30);
+            this.mv_X.Name = "mv_X";
+            this.mv_X.Size = new System.Drawing.Size(40, 20);
+            this.mv_X.TabIndex = 13;
+            // 
+            // SetMoveTO
+            // 
+            this.SetMoveTO.BackColor = System.Drawing.Color.DarkCyan;
+            this.SetMoveTO.BackColorAdditional = System.Drawing.Color.Gray;
+            this.SetMoveTO.BackColorGradientEnabled = false;
+            this.SetMoveTO.BackColorGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
+            this.SetMoveTO.BorderColor = System.Drawing.Color.Tomato;
+            this.SetMoveTO.BorderColorEnabled = false;
+            this.SetMoveTO.BorderColorOnHover = System.Drawing.Color.Tomato;
+            this.SetMoveTO.BorderColorOnHoverEnabled = false;
+            this.SetMoveTO.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.SetMoveTO.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SetMoveTO.ForeColor = System.Drawing.Color.White;
+            this.SetMoveTO.Location = new System.Drawing.Point(142, 56);
+            this.SetMoveTO.Name = "SetMoveTO";
+            this.SetMoveTO.RippleColor = System.Drawing.Color.Black;
+            this.SetMoveTO.RoundingEnable = false;
+            this.SetMoveTO.Size = new System.Drawing.Size(132, 22);
+            this.SetMoveTO.TabIndex = 14;
+            this.SetMoveTO.Text = "SETMOVETO P";
+            this.SetMoveTO.TextHover = null;
+            this.SetMoveTO.UseDownPressEffectOnClick = false;
+            this.SetMoveTO.UseRippleEffect = true;
+            this.SetMoveTO.UseVisualStyleBackColor = false;
+            this.SetMoveTO.UseZoomEffectOnHover = false;
+            this.SetMoveTO.Click += new System.EventHandler(this.SetMoveTO_Click);
+            // 
+            // mv_Y
+            // 
+            this.mv_Y.Location = new System.Drawing.Point(188, 30);
+            this.mv_Y.Name = "mv_Y";
+            this.mv_Y.Size = new System.Drawing.Size(40, 20);
+            this.mv_Y.TabIndex = 15;
+            // 
+            // mv_Z
+            // 
+            this.mv_Z.Location = new System.Drawing.Point(234, 30);
+            this.mv_Z.Name = "mv_Z";
+            this.mv_Z.Size = new System.Drawing.Size(40, 20);
+            this.mv_Z.TabIndex = 16;
+            // 
+            // SetMoveTOH
+            // 
+            this.SetMoveTOH.BackColor = System.Drawing.Color.DarkCyan;
+            this.SetMoveTOH.BackColorAdditional = System.Drawing.Color.Gray;
+            this.SetMoveTOH.BackColorGradientEnabled = false;
+            this.SetMoveTOH.BackColorGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
+            this.SetMoveTOH.BorderColor = System.Drawing.Color.Tomato;
+            this.SetMoveTOH.BorderColorEnabled = false;
+            this.SetMoveTOH.BorderColorOnHover = System.Drawing.Color.Tomato;
+            this.SetMoveTOH.BorderColorOnHoverEnabled = false;
+            this.SetMoveTOH.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.SetMoveTOH.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SetMoveTOH.ForeColor = System.Drawing.Color.White;
+            this.SetMoveTOH.Location = new System.Drawing.Point(142, 84);
+            this.SetMoveTOH.Name = "SetMoveTOH";
+            this.SetMoveTOH.RippleColor = System.Drawing.Color.Black;
+            this.SetMoveTOH.RoundingEnable = false;
+            this.SetMoveTOH.Size = new System.Drawing.Size(132, 22);
+            this.SetMoveTOH.TabIndex = 17;
+            this.SetMoveTOH.Text = "SETMOVETO H";
+            this.SetMoveTOH.TextHover = null;
+            this.SetMoveTOH.UseDownPressEffectOnClick = false;
+            this.SetMoveTOH.UseRippleEffect = true;
+            this.SetMoveTOH.UseVisualStyleBackColor = false;
+            this.SetMoveTOH.UseZoomEffectOnHover = false;
+            this.SetMoveTOH.Click += new System.EventHandler(this.SetMoveTOH_Click);
+            // 
+            // PlayerIDText
+            // 
+            this.PlayerIDText.Location = new System.Drawing.Point(3, 4);
+            this.PlayerIDText.Name = "PlayerIDText";
+            this.PlayerIDText.Size = new System.Drawing.Size(133, 20);
+            this.PlayerIDText.TabIndex = 18;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -701,7 +838,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.SettingsBTN)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.SettingsLBOX.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
+            this.ClientPAGE.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -715,7 +852,7 @@
             this.groupBox9.PerformLayout();
             this.NickTAG.ResumeLayout(false);
             this.NickTAG.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
+            this.HostPAGE.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox6.ResumeLayout(false);
@@ -728,6 +865,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.DebugPAGE.ResumeLayout(false);
+            this.DebugPAGE.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -742,9 +881,9 @@
         private System.Windows.Forms.TextBox CMDb;
         private System.Windows.Forms.PictureBox SettingsBTN;
         private System.Windows.Forms.TabControl SettingsLBOX;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage ClientPAGE;
         private System.Windows.Forms.GroupBox NickTAG;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage HostPAGE;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox MaxPlTEXT;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -773,7 +912,6 @@
         private System.Windows.Forms.CheckBox CheckClientSTATEFlag;
         public System.Windows.Forms.TextBox NickNameTEXT;
         public System.Windows.Forms.ComboBox CharacterSelectorTEXT;
-        private System.Windows.Forms.Timer SaveServerData;
         private System.Windows.Forms.CheckBox DedicatedFlag;
         private System.Windows.Forms.GroupBox groupBox7;
         private HuaweiUnlocker.UI.NButton GamePathBTN;
@@ -781,6 +919,15 @@
         private HuaweiUnlocker.UI.NButton CmdBTN;
         private HuaweiUnlocker.UI.NButton HostBTN;
         private HuaweiUnlocker.UI.NButton ConBTN;
+        private System.Windows.Forms.TabPage DebugPAGE;
+        private System.Windows.Forms.TextBox TestName;
+        private HuaweiUnlocker.UI.NButton SpwnObjBTN;
+        private System.Windows.Forms.TextBox mv_Z;
+        private System.Windows.Forms.TextBox mv_Y;
+        private HuaweiUnlocker.UI.NButton SetMoveTO;
+        private System.Windows.Forms.TextBox mv_X;
+        private HuaweiUnlocker.UI.NButton SetMoveTOH;
+        private System.Windows.Forms.TextBox PlayerIDText;
     }
 }
 

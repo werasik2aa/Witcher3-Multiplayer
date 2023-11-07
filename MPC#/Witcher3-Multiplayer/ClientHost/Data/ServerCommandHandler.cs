@@ -23,10 +23,9 @@ namespace Witcher3_Multiplayer.ClientHost.Data
                             return "Too Much args";
                         if (!args[1].ToLower().Contains("true") & !args[1].ToLower().Contains("false"))
                             return "Allowed Value (True || False)";
-                        var SCL = ServerData.Find(x => x.ClientID == IDClient);
-                        ServerData.Remove(SCL);
+                        var SCL = ServerData[HostSender.GetClientID(fromclie)];
                         SCL.ISAdmin = bool.Parse(args[1]);
-                        ServerData.Add(SCL);
+                        ServerData[HostSender.GetClientID(fromclie)] = SCL;
                         return "Successfull changed player admin state";
                     }
                     else if (cmd.StartsWith("//Kick"))
@@ -39,6 +38,11 @@ namespace Witcher3_Multiplayer.ClientHost.Data
                             PlayerDataClient.Remove(IDClient);
                         HostSender.SendDataToAllExceptOne(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_DISCONNECTED);
                         return "[SERVER] Successfully kicked from server";
+                    }
+                    else if (cmd.StartsWith("//StopServer"))
+                    {
+                        ServerV2.StopServer();
+                        return "[SERVER] Successfully Stopped";
                     }
                     else
                         return "[SERVER] Command not found";

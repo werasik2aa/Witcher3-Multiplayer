@@ -13,9 +13,8 @@ namespace Witcher3_Multiplayer.ClientHost
     public struct PlayerServer
     {
         public string NickName;
-        public int ClientID;
         public bool ISAdmin;
-        public bool ISConsole;
+        public List<string> ChestHorseItems;
     }
     [Serializable]
     public struct CombatTarget
@@ -39,6 +38,7 @@ namespace Witcher3_Multiplayer.ClientHost
         public int ID;
         public bool IsOnHorse;
         public bool IsDead;
+        public bool ISMainCharacter;
         public int HP;
         public int AreaID;
         public int Plevel;
@@ -54,6 +54,8 @@ namespace Witcher3_Multiplayer.ClientHost
         public int CurPlayers;
         public int MaxPlayers;
         public double Version;
+        public int DifficultyLevel;
+        public int TimeAsMS;
         public bool RequireCheckVersion;
     }
     [Serializable]

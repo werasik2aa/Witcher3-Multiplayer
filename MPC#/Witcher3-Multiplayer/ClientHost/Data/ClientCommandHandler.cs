@@ -25,11 +25,11 @@ namespace Witcher3_Multiplayer.ClientHost.Data
                         return "[GameClient] Please input ServerPort";
                     if (args.Length > 3)
                         return "[GameClient] Not Implemented";
-                    if (IsHost)
+                    if (IsHost && !DataAPP.ServerDedicated)
                     {
                         LOG("Your hosted server Stopped");
                         ClientSender.SendData(ClientV2.UDP_CLIENT, (int)RecvSendTypes.SND_DISCONNECTED);
-                        return "[GameClient] Already hosted";
+                        return "[GameClient] Already hosted and connected!" + NewLineGame + " Please stop server to connect to another server";
                     }
                     if (!IsConnected)
                     {
@@ -60,7 +60,7 @@ namespace Witcher3_Multiplayer.ClientHost.Data
                     }
                     else
                         ClientV2.Disconnect();
-                    return "Connected!";
+                    return "Connected: " + IsConnected;
                 }
                 else if (cmd.StartsWith("//HostGame"))
                 {

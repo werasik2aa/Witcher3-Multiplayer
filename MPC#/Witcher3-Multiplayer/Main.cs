@@ -116,12 +116,6 @@ namespace Witcher3_Multiplayer
         }
         public void Connect_ActionTest()
         {
-            if (IsHost)
-            {
-                LOG("Your hosted server Stopped");
-                ClientSender.SendData(ClientV2.UDP_CLIENT, (int)RecvSendTypes.SND_DISCONNECTED);
-                return;
-            }  
             if (!IsConnected)
             {
                 DataAPP.ClientPort = DataAPP.ServerPort;
@@ -199,7 +193,8 @@ namespace Witcher3_Multiplayer
                     {
                         if (SocketV2.ConnectToGame())
                             LOG(ClientCommandHandler.CommandLST(ClientV2.UDP_CLIENT, CMDb.Text, CMDb.Text.GetArgs()));
-                    } else
+                    }
+                    else
                         LOG(ClientCommandHandler.CommandLST(ClientV2.UDP_CLIENT, CMDb.Text, CMDb.Text.GetArgs()));
                 }
             });
@@ -208,11 +203,6 @@ namespace Witcher3_Multiplayer
         private void SettingsBTN_Click(object sender, EventArgs e)
         {
             SettingsLBOX.Visible = !SettingsLBOX.Visible;
-        }
-
-        private void SaveServerData_Tick(object sender, EventArgs e)
-        {
-            ServerData.SeriliazeToFile("Data\\PlayerData");
         }
 
         private void GamePathBTN_Click(object sender, EventArgs e)
@@ -233,6 +223,21 @@ namespace Witcher3_Multiplayer
         private void HostBTN_Click(object sender, EventArgs e)
         {
             Host_ActionTest();
+        }
+
+        private void SpwnObjBTN_Click(object sender, EventArgs e)
+        {
+            GameManagerMY.Spawn_Player(TestName.Text, int.Parse(PlayerIDText.Text), DataAPP.character, new Vector3(int.Parse(mv_X.Text), int.Parse(mv_Y.Text), int.Parse(mv_Z.Text)), new Vector3(0,0,0));
+        }
+
+        private void SetMoveTO_Click(object sender, EventArgs e)
+        {
+            GameManagerMY.SetPlayerMoveTo(int.Parse(PlayerIDText.Text), new Vector3(int.Parse(mv_X.Text), int.Parse(mv_Y.Text), int.Parse(mv_Z.Text)));
+        }
+
+        private void SetMoveTOH_Click(object sender, EventArgs e)
+        {
+            GameManagerMY.SetPlayerHorseMoveTo(int.Parse(PlayerIDText.Text), new Vector3(int.Parse(mv_X.Text), int.Parse(mv_Y.Text), int.Parse(mv_Z.Text)));
         }
     }
 }

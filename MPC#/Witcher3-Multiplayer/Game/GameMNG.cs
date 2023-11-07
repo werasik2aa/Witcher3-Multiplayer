@@ -93,9 +93,13 @@ namespace Witcher3_Multiplayer.Game
         {
             return SocketV2.ReadInt(Convertors.Execute("GetCurrentHP"));
         }
-        public static int SetPlayerHP(int idcl, int health)
+        public static string SetPlayerHP(int idcl, int health)
         {
-            return SocketV2.ReadInt(Convertors.Execute("SetPlayerCurrentHP(" + idcl + ", " + health + ")"));
+            return SocketV2.ReadString(Convertors.Execute("SetPlayerCurrentHP(" + idcl + ", " + health + ")"));
+        }
+        public static string SetPlayerLevel(int idcl, int lvl)
+        {
+            return SocketV2.ReadString(Convertors.Execute("SetPlayerCurrentLevel(" + idcl + ", " + lvl + ")"));
         }
         public static int GetPlayerLevel()
         {
@@ -125,9 +129,9 @@ namespace Witcher3_Multiplayer.Game
         {
             return SocketV2.ReadBool(Convertors.Execute("IsOnHorse"));
         }
-        public static string SetPlayerIsOnHorse(int client, int state)
+        public static string SetPlayerIsOnHorse(int client, bool state)
         {
-            return SocketV2.ReadString(Convertors.Execute("MountHorse(" + client + ", " + state + ")"));
+            return SocketV2.ReadString(Convertors.Execute("MountHorse(" + client + ", " + (state? 1 : 0) + ")"));
         }
         public static int GetCurrentPlayers()
         {

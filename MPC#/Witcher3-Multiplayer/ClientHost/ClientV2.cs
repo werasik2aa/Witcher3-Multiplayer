@@ -49,7 +49,7 @@ namespace Witcher3_Multiplayer.ClientHost
             IsConnected = true;
             MyName = nick;
             GameManagerUI.InitGame(MyCharacterTemplate = chara);
-            ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.RET_CONNECTED);
+            ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.RET_CONNECTED, DataAPP.NickName);
             while (IsConnected)
             {
                 try
@@ -59,8 +59,7 @@ namespace Witcher3_Multiplayer.ClientHost
                     OperateWithData(f.Buffer);
                 } catch
                 {
-                    UDP_CLIENT.Close();
-                    IsConnected = false;
+                    Disconnect();
                     LOG("[client] Game Or Server Closed");
                 }
             }
@@ -73,7 +72,7 @@ namespace Witcher3_Multiplayer.ClientHost
                 {
                     var nwdata = DataManager.ReadPlayerData(MyId, MyName, MyCharacterTemplate); //GET NEW
 
-                    if (!DataManager.IsClientContainsCombat(nwdata.CurrentTarget.Guid) && !nwdata.CurrentTarget.IsDead)
+                    if (!DataManager.IsClientContainsCombat(nwdata.CurrentTarget.Guid))
                         CombatTargetsClient.Add(nwdata.CurrentTarget);
 
                     if (nwdata.IsOnHorse != player_data.IsOnHorse)
@@ -108,6 +107,8 @@ namespace Witcher3_Multiplayer.ClientHost
                     }
                     CombatTargetsClient = nava;
                     player_data = nwdata;
+                    if (ChatInputMode)
+                        GameManagerUI.BlockOrUnblockAllActions(ChatInputMode);
                     Thread.Sleep(SendDataDelayC_S_C);
                 }
             });
@@ -141,6 +142,9 @@ namespace Witcher3_Multiplayer.ClientHost
                             LOG("[client] Player ID: " + iiii.ID);
                             PlayerDataClient.Add(iiii.ID, iiii);
                             GameManagerMY.Spawn_Player(iiii.NickName, iiii.ID, iiii.CharacterTemplate, iiii.PlayerPosition, iiii.HorsePosition);
+                            GameManagerMY.SetPlayerLevel(iiii.ID, iiii.Plevel);
+                            GameManagerMY.SetPlayerHP(iiii.ID, iiii.HP);
+                            GameManagerMY.SetPlayerIsOnHorse(iiii.ID, iiii.IsOnHorse);
                         }
                         break;
                     case RecvSendTypes.RCV_COMMANDRESPONSE:
@@ -152,9 +156,9 @@ namespace Witcher3_Multiplayer.ClientHost
                         GameManagerUI.ChatUpdate(PrevChatText);
                         break;
                     case RecvSendTypes.RCV_DISCONNECTED:
-                        LOG("[host] ===Disconnected===");
-                        LOG("[host] PlayerID: " + IDClient);
-                        LOG("[host] PlayerName: " + PlayerDataClient[IDClient].NickName);
+                        LOG("[client] ===Disconnected===");
+                        LOG("[client] PlayerID: " + IDClient);
+                        LOG("[client] PlayerName: " + PlayerDataClient[IDClient].NickName);
                         PlayerDataClient.Remove(IDClient);
                         GameManagerMY.Remove_Player(IDClient);
                         break;
@@ -163,7 +167,7 @@ namespace Witcher3_Multiplayer.ClientHost
                         if (DataAPP.Debug) LOG("[pre] Verify the data");
                         if (!string.IsNullOrEmpty(ServerResp.Name))
                         {
-                            if(ServerResp.RequireCheckVersion && ServerResp.Version == DataManager.ReadDouble(DataManager.GetData("MODVER", "GetMODVersion"), "VERS"))
+                            if (ServerResp.RequireCheckVersion && ServerResp.Version != DataManager.ReadDouble(DataManager.GetData("MODVER", "GetMODVersion"), "VERS"))
                             {
                                 ELOG("[Pre] Version of server doesn't match with version of the mod! Please Update MOD");
                                 return;
@@ -202,36 +206,73 @@ namespace Witcher3_Multiplayer.ClientHost
                         }
                         break;
                     case RecvSendTypes.RCV_PLAYERONHORSE:
-                        LOG("[client] PlayerID: " + IDClient + " State Sit OnHorse: " + BitConverter.ToBoolean(recvdata, 0));
-                        GameManagerMY.SetPlayerIsOnHorse(IDClient, BitConverter.ToBoolean(recvdata, 0) ? 1 : 0);
+                        if (PlayerDataClient.ContainsKey(IDClient))
+                        {
+                            LOG("[client] PlayerID: " + IDClient + " State Sit OnHorse: " + BitConverter.ToBoolean(recvdata, 0));
+                            var a = PlayerDataClient[IDClient];
+                            a.IsOnHorse = BitConverter.ToBoolean(recvdata, 0);
+                            PlayerDataClient[IDClient] = a;
+                            GameManagerMY.SetPlayerIsOnHorse(IDClient, BitConverter.ToBoolean(recvdata, 0));
+                        }
                         break;
                     case RecvSendTypes.RCV_PLAYERPOSITION:
-                        GameManagerMY.SetPlayerMoveTo(IDClient, recvdata.ToStructure<Vector3>());
+                        if (PlayerDataClient.ContainsKey(IDClient))
+                        {
+                            var a = PlayerDataClient[IDClient];
+                            a.HorsePosition = recvdata.ToStructure<Vector3>();
+                            PlayerDataClient[IDClient] = a;
+                            GameManagerMY.SetPlayerMoveTo(IDClient, recvdata.ToStructure<Vector3>());
+                        }
                         break;
                     case RecvSendTypes.RCV_PLAYERHORSEPOSITION:
-                        GameManagerMY.SetPlayerHorseMoveTo(IDClient, recvdata.ToStructure<Vector3>());
+                        if (PlayerDataClient.ContainsKey(IDClient))
+                        {
+                            var a = PlayerDataClient[IDClient];
+                            a.PlayerPosition = recvdata.ToStructure<Vector3>();
+                            PlayerDataClient[IDClient] = a;
+                            GameManagerMY.SetPlayerHorseMoveTo(IDClient, recvdata.ToStructure<Vector3>());
+                        }
                         break;
                     case RecvSendTypes.RCV_ENTITYDATA:
-                        var cbdat = recvdata.ToStructure<CombatTarget>();
-                        GameManagerMY.Spawn_NPC(cbdat.Template, cbdat.Position, cbdat.Guid);
+                        var npcdata = recvdata.ToStructure<CombatTarget>();
+                        GameManagerMY.Spawn_NPC(npcdata.Template, npcdata.Position, npcdata.Guid);
                         break;
                     case RecvSendTypes.RCV_PLAYERCOMBATTARGET:
-                        var cbdate = recvdata.ToStructure<CombatTarget>();
-                        if (DataAPP.Debug)
-                            LOG("[Client] EntityGUID: " + cbdate.Guid + " HP: " + cbdate.HP);
-                        if (cbdate.IsDead)
+                        if (PlayerDataClient.ContainsKey(IDClient))
                         {
-                            LOG("[Client] Killed by: " + IDClient);
-                            GameManagerMY.KillEntity(IDClient);
+                            var cbdate = recvdata.ToStructure<CombatTarget>();
+                            if (DataAPP.Debug) LOG("[Client] EntityGUID: " + cbdate.Guid + " HP: " + cbdate.HP);
+                            var a = PlayerDataClient[IDClient];
+                            a.CurrentTarget = cbdate;
+                            PlayerDataClient[IDClient] = a;
+                            if (cbdate.IsDead)
+                            {
+                                LOG("[Client] Killed by: " + IDClient);
+                                GameManagerMY.KillEntity(IDClient);
+                            }
+                            else
+                                GameManagerMY.Attack(IDClient, cbdate.FightState, cbdate.HP);
                         }
-                        else
-                            GameManagerMY.Attack(IDClient, cbdate.FightState, cbdate.HP);
                         break;
                     case RecvSendTypes.RCV_PLAYERHP:
-                        GameManagerMY.SetPlayerHP(IDClient, BitConverter.ToUInt16(recvdata, 0));
+                        if (PlayerDataClient.ContainsKey(IDClient))
+                        {
+                            if (DataAPP.Debug) LOG("[Client] PlayerID: " + IDClient + " CurHP: " + BitConverter.ToUInt16(recvdata, 0));
+                            var a = PlayerDataClient[IDClient];
+                            a.HP = BitConverter.ToInt16(recvdata, 0);
+                            PlayerDataClient[IDClient] = a;
+                            GameManagerMY.SetPlayerHP(IDClient, BitConverter.ToUInt16(recvdata, 0));
+                        }
                         break;
                     case RecvSendTypes.RCV_PLAYERLEVEL:
-                        GameManagerMY.SetPlayerHP(IDClient, BitConverter.ToUInt16(recvdata, 0));
+                        if (PlayerDataClient.ContainsKey(IDClient))
+                        {
+                            if (DataAPP.Debug) LOG("[Client] PlayerID: " + IDClient + " CurPLEVEL: " + BitConverter.ToUInt16(recvdata, 0));
+                            var a = PlayerDataClient[IDClient];
+                            a.Plevel = BitConverter.ToInt16(recvdata, 0);
+                            PlayerDataClient[IDClient] = a;
+                            GameManagerMY.SetPlayerLevel(IDClient, BitConverter.ToUInt16(recvdata, 0));
+                        }
                         break;
                     default:
                         if (DataAPP.Debug) ELOG("No Packet Handle function for: " + head);
@@ -241,13 +282,15 @@ namespace Witcher3_Multiplayer.ClientHost
         }
         public static void Disconnect()
         {
-            ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_DISCONNECTED);
-            Thread.Sleep(500);
-            UDP_CLIENT.Close();
-            UDP_CLIENT.Dispose();
-            IsConnected = false;
-            if (!DataAPP.ServerDedicated & IsHost)
-                ServerV2.StopServer();
+            LOG("Host: " + IsHost);
+            if (!IsHost)
+            {
+                ClientSender.SendData(UDP_CLIENT, (int)RecvSendTypes.SND_DISCONNECTED);
+                UDP_CLIENT.Close();
+                UDP_CLIENT.Dispose();
+            }
+            else ServerV2.StopServer();
+            IsConnected = IsHost = false;
         }
     }
 }
