@@ -26,6 +26,8 @@ exec function GetPlayerData()
     output += ",@ANIMINT@: " + GetWitcherPlayer().GetActorAnimState();
     output += ",@ANIMNAME@: @" + GetWitcherPlayer().GetCurrentStateName() + "@";
     output += ",@ISDEAD@: " + GetWitcherPlayer().isDead;
+    //output += ",@ANSTATENAMECUR@: " + thePlayer.GetStateCur();
+    //output += ",@ANSTATENAME@: " + thePlayer.GetStateName();
     output += ",@COMBHEADING@: " + GetWitcherPlayer().GetCombatActionHeading();
     Log("W3MP:!PLAYERDATA!{" + output + "}");
 }

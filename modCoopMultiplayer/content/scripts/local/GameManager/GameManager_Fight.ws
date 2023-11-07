@@ -16,8 +16,10 @@ exec function Attack(idcl:int, attackint:int, health:int)
             ((CActor)entity).SetBehaviorVariable('combatActionType', attackint);
         _SetCombatTarget(entity, entity2);//SetTarg
     }
-    else
+    else {
         _ResetCombatTarget(entity, entity2);
+        entity.GotoState('Exploration');
+    }
     _CalculateHealthEnemy(entity2, health);
     if(data.DebugMode)
         Log("[WITCHER3MP] AttackID: " + attackint + " PlayerID: " + idcl + " EntityGUID: " + entity.GetGuidHash());

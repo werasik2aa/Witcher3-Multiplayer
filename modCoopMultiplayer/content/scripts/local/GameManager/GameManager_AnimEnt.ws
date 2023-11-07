@@ -66,7 +66,6 @@ exec function MountHorse(idcl:int, istate:int)
     ((CActor)entityP).EnablePhysicalMovement(istate == 1);
     if(istate == 1) 
     {
-        entityP.AddTag('MYisOnHorsetrue');
         vehicle.StopTheVehicle();
         vehicle.AttachEntity(entityP);//AttachTo Vehicle object
         vehicle.OnMountStarted((CActor)entityP, EVS_driver_slot);
@@ -74,12 +73,11 @@ exec function MountHorse(idcl:int, istate:int)
         vehicle.Mount((CActor)entityP, VMT_TeleportAndMount, EVS_driver_slot);//Just teleports to vehicle
 		if (((CActor)entityP).GetMovingAgentComponent().GetMovementAdjustor()) ((CActor)entityP).GetMovingAgentComponent().GetMovementAdjustor().CancelAll(); //CANCEL ALL MOVEMENT EVENTS
         vehicle.OnMountFinished((CActor)entityP);
-        //entity.GetRootAnimatedComponent().PlaySlotAnimationAsync('animation', 'HORSE_MOUNT', SAnimatedComponentSlotAnimationSettings(0.25f, 0.875f))
+        entityP.GotoState('HorseAction');
+        //entityP.GetState('MountHorse')).SetupState(this, mountType, EVS_driver_slot);
     }
-    else {
-        entityP.RemoveTag('MYisOnHorsetrue');
+    else
         entityP.BreakAttachment();
-    }
     if(data.DebugMode)
         Log("[WITCHER3MP] PlayerID: " + idcl + " Set MountState: " + (istate == 1) + " HORSE: " + vehicle);
 }

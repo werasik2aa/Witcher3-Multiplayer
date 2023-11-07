@@ -50,8 +50,10 @@ exec function Teleport_PlayerHorse(idcl:int, xp:int, yp:int, zp:int)//agen set
 //FUNCTIONS
 function _SetHeading(entity:CNewNPC, targpos:Vector)
 {
-  ((CActor)entity).GetMovingAgentComponent().SetGameplayMoveDirection(VecHeading(targpos - entity.GetWorldPosition()));
-  if(getStorage().DebugMode)
+    var mvADJ : CMovementAdjustor; 
+    var ticket : SMovementAdjustmentRequestTicket;
+    ((CActor)entity).GetMovingAgentComponent().SetGameplayMoveDirection(VecHeading(targpos - entity.GetWorldPosition()));
+    if(getStorage().DebugMode)
         Log("[WITCHER3MP] Setted Heading: " + VecToString(targpos - entity.GetWorldPosition()));
 }
 function _Teleport(entity:CNewNPC, pos:Vector)
@@ -71,17 +73,21 @@ function _MoveEntity(entity:CNewNPC, targpos:Vector, SpeedOnDist:int, MinDistanc
     mvADJ = entity.GetMovingAgentComponent().GetMovementAdjustor();
     if(SpeedOnDist > 0) dist = SpeedOnDist;//SET CUSTOM SPEED
 
-    _SetHeading(entity, targpos); //SET heading
-    _SetTypeMove(entity, (int)dist);
+    if(!DirectCtrl)
+        _SetHeading(entity, targpos); //SET heading
+    _SetTypeMove(entity, (int)(dist*2));
+
     if(dist > MinDistance && DirectCtrl) //MOVE HERE
     {
-        ticket = mvADJ.CreateNewRequest('W3MP_ADJUST');
+        ticket = mvADJ.CreateNewRequest('W3MP_MOVEMENT');
         mvADJ.AdjustmentDuration(ticket, 0.5);
         mvADJ.ShouldStartAt(ticket, entity.GetWorldPosition());
-        mvADJ.MaxRotationAdjustmentSpeed(ticket, dist);
-        mvADJ.MaxLocationAdjustmentSpeed(ticket, dist);
+        mvADJ.MaxRotationAdjustmentSpeed(ticket, 10000);
+        mvADJ.MaxLocationAdjustmentSpeed(ticket, dist/4);
         mvADJ.AdjustLocationVertically(ticket, true);
         mvADJ.ScaleAnimationLocationVertically(ticket, true);
+        if(dist > MinDistance + 1) //PREVENT BUG ROT
+            mvADJ.RotateTo(ticket, VecHeading(targpos - entity.GetWorldPosition()));
         mvADJ.SlideTo(ticket, targpos);
     }
     if(dist > MaxDistance) // TELEPORT IF hight range between object

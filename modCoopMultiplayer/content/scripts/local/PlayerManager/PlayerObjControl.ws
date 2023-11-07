@@ -1,11 +1,9 @@
 latent function Update2()
 {
    	var data : Storage;
-   	var i : int;
-   	var clid : int;
-   	var positionP : Vector;
-	var positionPH : Vector;
+   	var i, clid : int;
 	var waterLevel : float;
+   	var positionP, positionPH : Vector;
    	var horseEntity, entityP : CNewNPC;
 	var entityPAC : CMovingPhysicalAgentComponent;
    	data = getStorage();
@@ -21,22 +19,24 @@ latent function Update2()
 			//PLAYER POSITION 1.CHECK_WATER and other things 2.SETPPOS 3.SetHorsePos
 			//1.
 			waterLevel = theGame.GetWorld().GetWaterLevel(positionP);
-
-			//entityPAC.SetAnimatedMovement(false);
-			//entityPAC.EnablePhysicalMovement(true);
-			//entityPAC.SnapToNavigableSpace(false);
-			if(waterLevel > positionP.Z) {
+			if(waterLevel > positionP.Z - 0.1 && !entityP.IsSwimming()) 
+			{
 				entityP.ChangeStance(NS_Swim);
 				entityPAC.SetSwimming(true);
 				entityPAC.SetDiving(true);
 				entityPAC.SetGravity(false);
-				entityPAC.SetAnimatedMovement(false);	
-			} else {
+				entityPAC.SetAnimatedMovement(false);
+				entityP.GotoState('Swimming');
+			}
+			if(waterLevel < positionP.Z - 0.1 && entityP.IsSwimming())
+			{
 				entityP.ChangeStance(NS_Normal);
-				entityPAC.SetGravity(true);
+				entityPAC.SetGravity(false);
 				entityPAC.SetSwimming(false);
 				entityPAC.SetDiving(false);
+				entityP.GotoState('Exploration');
 			}
+			entityP.GotoState('Swimming');
 			//2.SETPPOS | 3.SetHorsePos
 			//_MoveEntity(entity, targetpos, ownspeed, mindist, maxdist, DirectOrAuto(BOOL))	
        	    _MoveEntity(entityP, positionP, 0, 1, 20, true);
