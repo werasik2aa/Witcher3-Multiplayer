@@ -36,7 +36,6 @@ latent function Update2()
 				entityPAC.SetDiving(false);
 				entityP.GotoState('Exploration');
 			}
-			entityP.GotoState('Swimming');
 			//2.SETPPOS | 3.SetHorsePos
 			//_MoveEntity(entity, targetpos, ownspeed, mindist, maxdist, DirectOrAuto(BOOL))	
        	    _MoveEntity(entityP, positionP, 0, 1, 20, true);

@@ -79,15 +79,15 @@ function _MoveEntity(entity:CNewNPC, targpos:Vector, SpeedOnDist:int, MinDistanc
 
     if(dist > MinDistance && DirectCtrl) //MOVE HERE
     {
+        mvADJ.Cancel(mvADJ.GetRequest('W3MP_MOVEMENT'));
         ticket = mvADJ.CreateNewRequest('W3MP_MOVEMENT');
         mvADJ.AdjustmentDuration(ticket, 0.5);
         mvADJ.ShouldStartAt(ticket, entity.GetWorldPosition());
         mvADJ.MaxRotationAdjustmentSpeed(ticket, 10000);
-        mvADJ.MaxLocationAdjustmentSpeed(ticket, dist/4);
+        mvADJ.MaxLocationAdjustmentSpeed(ticket, dist * 2);
         mvADJ.AdjustLocationVertically(ticket, true);
         mvADJ.ScaleAnimationLocationVertically(ticket, true);
-        if(dist > MinDistance + 1) //PREVENT BUG ROT
-            mvADJ.RotateTo(ticket, VecHeading(targpos - entity.GetWorldPosition()));
+        mvADJ.RotateTo(ticket, VecHeading(targpos - entity.GetWorldPosition()));
         mvADJ.SlideTo(ticket, targpos);
     }
     if(dist > MaxDistance) // TELEPORT IF hight range between object
