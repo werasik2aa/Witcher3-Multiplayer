@@ -181,7 +181,7 @@ namespace Witcher3_Multiplayer.ClientHost
                         LOG("[host] Found New Client! Sending Server Info Response!");
                         string ClientName = Encoding.UTF8.GetString(recvdata);
                         var host_datan = host_data; //Set If exist or no
-                        if(PlayerDataServer.ContainsKey(fromclie) && PlayerDataServer[fromclie].NickName == ClientName && !DataAPP.JoinTestLocalClient)
+                        if(PlayerDataServer.Any(x => x.Value.NickName == ClientName) && !DataAPP.JoinTestLocalClient)
                             host_datan.MaxPlayers = -1;
                         HostSender.SendDataHost(UDP_SERVER, fromclie, (int)RecvSendTypes.RCV_HOSTINFO, host_datan.ToByteArray());
                         break;
