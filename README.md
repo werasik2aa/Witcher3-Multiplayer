@@ -8,3 +8,6 @@ Soon InGame Gui with dll c++ ???? F this dev
 
 Server console Password and Server Password not implemented!
 MyMod Dev-DS: https://discord.com/invite/yahCmFYjKe
+
+(C) Moongamer 4pda
+or werasik2aa or nopirateonlysteam
