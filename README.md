@@ -11,8 +11,6 @@ What's should be here
 
 Run witcher3 game with key -net -debugscripts!
 
-MyMod Dev-DS: https://discord.com/invite/yahCmFYjKe
-
 
 //MANY BUGS AND ISSUES. My mod dev experience below zero...
 
